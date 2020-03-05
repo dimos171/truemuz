@@ -1,0 +1,12 @@
+@import '../../shared/variables/colors';
+
+.player-container {
+  position: fixed;
+  bottom: 0;
+  height: 60px;
+  left: 0rem;
+  right: 0rem;
+  border-top: solid 1px $main-dark-theme-border;
+  background-color: $main-dark-theme-background-color;
+  z-index: 1000;
+}

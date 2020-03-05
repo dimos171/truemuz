@@ -1,0 +1,16 @@
+@import '../../shared/variables/colors';
+
+.header-container {
+  position: fixed;
+  top: 0;
+  height: 100px;
+  left: 0rem;
+  right: 0rem;
+  background-color: $main-dark-theme-background-color;
+  border-bottom: solid 1px $main-dark-theme-border;
+  z-index: 1000;
+
+  &-content {
+    height: inherit;
+  }
+}

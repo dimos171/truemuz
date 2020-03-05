@@ -1,0 +1,13 @@
+.cover-container {
+  width: inherit;
+
+  &-image {
+    width: inherit;
+  }
+}
+
+.rounded-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
