@@ -6,6 +6,7 @@ import './index.scss';
 export default function Header(props) {
   return (
     <header className="header-container px-5">
+      <div className="header-container-filler"></div>
       <div className="header-container-content d-flex align-items-center">
         <div className="col-5 p-0">
           <h4>

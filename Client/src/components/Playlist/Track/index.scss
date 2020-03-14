@@ -5,17 +5,14 @@
   line-height: 40px;
 
   &.active {
-    background: $main-dark-theme-active-track-background;
+    background: linear-gradient(
+      90deg,
+      $main-dark-theme-active-track-background 0%,
+      $main-dark-theme-active-track-background-sub 100%);
+    box-shadow: 0px 4px 4px $main-dark-theme-active-track-shadow;
   }
 }
 
-.vote-btn {
-  padding: 0 5px;
-  line-height: 25px;
-  border: 1px solid $main-dark-theme-btn-border;
-
-  &:hover {
-    cursor: pointer;
-    background-color: $main-dark-theme-active-btn-background;
-  }
+.track-name {
+  letter-spacing: 0.05em;
 }

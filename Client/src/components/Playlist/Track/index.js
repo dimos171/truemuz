@@ -27,7 +27,7 @@ export default function Track(props) {
     <div className={"d-flex track-container justify-content-between" + (props.collapsed ? ' active' : '')}>
       <div className="d-flex align-items-center ml-5">
         <GiPauseButton className="mr-3 icon" />
-        <div>
+        <div className="track-name">
           {props.name}
         </div>
       </div>
@@ -35,12 +35,8 @@ export default function Track(props) {
       <div className="d-flex align-items-center mr-5">
         {props.mainVersion && getContentBasedOnAlternatives()}
 
-        <div className="mr-5 small-title">
+        <div className="mr-5 small-text">
           {props.length}
-        </div>
-        
-        <div className="small-title vote-btn">
-          VOTE
         </div>
       </div>
     </div>

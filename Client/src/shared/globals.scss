@@ -1,4 +1,5 @@
 @import './variables/colors';
+@import './variables/fonts';
 
 html, body {
   height: 100%;
@@ -6,16 +7,31 @@ html, body {
   padding: 0;
   background-color: $main-dark-theme-background-color;
   font-size: 1rem;
+  font-family: 'Raleway Regular';
+  font-feature-settings: 'pnum' on, 'lnum' on;
 
   #app {
     height: 100%;
   }
 }
 
-.small-title {
-  font-size: 0.75rem;
+.small-text {
+  font-size: 0.85rem;
 }
 
 .icon {
   cursor: pointer;
+}
+
+h4 {
+  letter-spacing: 0.24em;
+}
+
+h5 {
+  letter-spacing: 0.075em;
+}
+
+.light-text {
+  font-family: 'Raleway Extra Light';
+  font-feature-settings: 'pnum' on, 'lnum' on;
 }

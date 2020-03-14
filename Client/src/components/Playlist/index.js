@@ -53,13 +53,15 @@ export default function Playlist(props) {
         <h5 className="mb-3 pb-2">
           PLAYLIST
         </h5>
-        <div>
-          Band: <div className="d-inline">Modernova</div>
+        <div className="d-flex">
+          <div className="light-text pr-1">Band:</div>
+          <div>Modernova</div>
         </div>
-        <div>
-          Album: <div className="d-inline">Do what you feel</div>
+        <div className="d-flex">
+          <div className="light-text pr-1">Album:</div>
+          <div>Do what you feel</div>
         </div>
-        <div className="small-title">
+        <div className="small-text">
           4 main tracks, 6 alternative versions
         </div>
       </div>
