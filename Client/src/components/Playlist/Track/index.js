@@ -35,7 +35,7 @@ export default function Track(props) {
       <div className="d-flex align-items-center mr-5">
         {props.mainVersion && getContentBasedOnAlternatives()}
 
-        <div className="mr-5 small-text">
+        <div className="mr-5 track-length">
           {props.length}
         </div>
       </div>

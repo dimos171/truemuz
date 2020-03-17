@@ -1,18 +1,13 @@
 @import './variables/colors';
 @import './variables/fonts';
 
-html, body {
-  height: 100%;
+body {
   margin: 0;
   padding: 0;
   background-color: $main-dark-theme-background-color;
   font-size: 1rem;
   font-family: 'Raleway Regular';
   font-feature-settings: 'pnum' on, 'lnum' on;
-
-  #app {
-    height: 100%;
-  }
 }
 
 .small-text {

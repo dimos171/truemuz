@@ -2,9 +2,7 @@
 @import '../../shared/variables/colors';
 
 .root-container {
-  background-color: $main-dark-theme-background-color;
   color: $main-dark-theme-text-color;
-  height: 100%;
 
   .partial-view-container {
     padding-top: 100px;

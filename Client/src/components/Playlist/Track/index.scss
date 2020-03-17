@@ -11,8 +11,13 @@
       $main-dark-theme-active-track-background-sub 100%);
     box-shadow: 0px 4px 4px $main-dark-theme-active-track-shadow;
   }
-}
 
-.track-name {
-  letter-spacing: 0.05em;
+  .track-name {
+    letter-spacing: 0.05em;
+  }
+
+  .track-length {
+    font-size: 0.70rem;
+    opacity: 0.9;
+  }
 }

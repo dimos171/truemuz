@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import './index.scss';
+
 export default function TrackDescription(props) {
   return (
     <div className="col-4 offset-1 px-0 mt-3 pt-2">
@@ -9,7 +11,7 @@ export default function TrackDescription(props) {
         </h5>
       </div>
 
-      <div>
+      <div className="description-text">
         Первая версия этой песни была написана еще в 2008 году на русском языке и звучала в первой аранжировке так [placeholder].
         <br />
         <br />
