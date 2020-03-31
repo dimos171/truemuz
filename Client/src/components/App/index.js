@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 
 import Header from '../Header';
@@ -9,22 +8,28 @@ import TrackDescription from '../TrackDescription';
 import TrackCover from '../TrackCover';
 import './index.scss';
 
-App.propTypes = {
-  title: PropTypes.string
-};
-
-export default function App(props) {
-  const [count, setCount] = useState(0);
+export default function App() {
+  const [activeTrack, setActiveTrack] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <div className="root-container mx-5">
       <Header />
-      <Player />
+      <Player
+        isPlaying={isPlaying}
+        activeTrack={activeTrack}
+        changeIsPlaying={setIsPlaying}
+      />
 
       <div className="partial-view-container d-flex">
         <Switch>
           <Route path="/">
-            <Playlist />
+            <Playlist
+              activeTrack={activeTrack}
+              isPlaying={isPlaying}
+              changeActiveTrack={setActiveTrack}
+              changeIsPlaying={setIsPlaying}
+            />
             <TrackCover />
             <TrackDescription />
           </Route>

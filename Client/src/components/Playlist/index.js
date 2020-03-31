@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import TrackGroup from './TrackGroup';
 
@@ -6,45 +7,61 @@ const trackGroups = [
   { 
     name: 'Hitchhiking the Air #1',
     length: '03:21',
+    id: '1',
     alternativeTracks: [ 
       {
         name: 'Alternative track #2',
         length: '03:20',
+        id: '2',
       },
       {
         name: 'Alternative track #3',
         length: '03:20',
+        id: '3',
       },
       {
         name: 'Alternative track #4',
         length: '03:20',
+        id: '4',
       },
     ],
   },
   {
     name: 'Hitchhiking the Air #2',
     length: '03:23',
+    id: '5',
     alternativeTracks: [],
   },
   {
     name: 'Hitchhiking the Air #3',
     length: '03:23',
+    id: '6',
     alternativeTracks: [ 
       {
         name: 'Alternative track #2',
         length: '03:20',
+        id: '7',
       },
       {
         name: 'Alternative track #3',
         length: '03:20',
+        id: '8',
       },
       {
         name: 'Alternative track #4',
         length: '03:20',
+        id: '9',
       },
     ],
   },
 ];
+
+Playlist.propTypes = {
+  activeTrack: PropTypes.object,
+  isPlaying: PropTypes.bool,
+  changeActiveTrack: PropTypes.func,
+  changeIsPlaying: PropTypes.func,
+};
 
 export default function Playlist(props) {
   return (
@@ -71,6 +88,10 @@ export default function Playlist(props) {
           <TrackGroup
             key={index}
             trackGroup={trackGroup}
+            activeTrack={props.activeTrack}
+            isPlaying={props.isPlaying}
+            changeActiveTrack={props.changeActiveTrack}
+            changeIsPlaying={props.changeIsPlaying}
           />
         )}
       </div>

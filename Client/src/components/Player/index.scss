@@ -3,10 +3,19 @@
 .player-container {
   position: fixed;
   bottom: 0;
-  height: 60px;
+  height: 100px;
   left: 0rem;
   right: 0rem;
-  border-top: solid 1px $main-dark-theme-border;
-  background-color: $main-dark-theme-background-color;
   z-index: 1000;
+  background-color: $main-dark-theme-background-color;
+
+  &-content {
+    height: 100%;
+    border-top: solid 1px $main-dark-theme-border;
+  }
+}
+
+.active-track {
+  font-size: 0.85rem;
+  line-height: 1.5rem;
 }

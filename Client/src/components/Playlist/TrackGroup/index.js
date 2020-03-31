@@ -6,33 +6,51 @@ import Track from '../Track';
 import './index.scss';
 
 TrackGroup.propTypes = {
-  trackGroup: PropTypes.object,     
+  trackGroup: PropTypes.object,
+  activeTrack: PropTypes.object,
+  isPlaying: PropTypes.bool,
+  changeActiveTrack: PropTypes.func,
+  changeIsPlaying: PropTypes.func, 
 };
 
 export default function TrackGroup(props) {
-  const [ test, setTest ] = useState(0);
   const [ collapsed, setCollapsed ] = useState(false);
-  const { trackGroup } = props;
+
+  const {
+    trackGroup,
+    activeTrack,
+    isPlaying,
+    changeActiveTrack,
+    changeIsPlaying,
+  } = props;
 
   const constainsAltervative = trackGroup.alternativeTracks && trackGroup.alternativeTracks.length > 0;
+
+  const isActiveTrack = (activeTrack, track) => activeTrack != null && activeTrack.id === track.id;
 
   const getAlternativeTracksMarkup = () =>
     trackGroup.alternativeTracks.map((track, index) => 
       <Track
         key={index}
-        name={track.name}
-        length={track.length}
+        track={track}
+        isActiveTrack={isActiveTrack(activeTrack, track)}
+        isPlaying={isPlaying}
+        changeActiveTrack={changeActiveTrack}
+        changeIsPlaying={changeIsPlaying}
       />
     );
 
   return (
     <div className={collapsed ? 'collapsed' : ''}>
       <Track
-        name={trackGroup.name}
-        length={trackGroup.length}
+        track={trackGroup}
         collapsed={collapsed}
         collapsedChange={setCollapsed}
         constainsAltervative={constainsAltervative}
+        isActiveTrack={isActiveTrack(activeTrack, trackGroup)}
+        isPlaying={isPlaying}
+        changeActiveTrack={changeActiveTrack}
+        changeIsPlaying={changeIsPlaying}
         mainVersion
       />
 
