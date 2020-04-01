@@ -38,7 +38,7 @@ namespace truemuz.API
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseInMemoryDatabase(Configuration.GetConnectionString("memory"));
+                options.UseSqlite(Configuration.GetConnectionString("sqlite"));
             });
 
             services.AddScoped<IBandRepository, BandRepository>();
