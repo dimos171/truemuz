@@ -2,18 +2,18 @@
 
 namespace truemuz.API.Domain.Models
 {
-    public class SongGroup : BaseModel
+    public class SongGroup : Entity<int>
     {
+        public string Name { get; set; }
+
         public int AlbumId { get; set; }
 
         public int HistoryId { get; set; }
 
-        #region Navigation properties
         public Album Album { get; set; }
 
         public History History { get; set; }
 
-        public ICollection<Song> Songs { get; set; } = new List<Song>();
-        #endregion
+        public ICollection<Song> Songs { get; set; }
     }
 }

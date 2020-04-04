@@ -1,11 +1,11 @@
 ﻿namespace truemuz.API.Domain.Models
 {
-    public class History: BaseModel
+    public class History : Entity<int>
     {
+        public string Text { get; set; }
+
         public int SongGroupId { get; set; }
 
-        #region Navigation properties
         public SongGroup SongGroup { get; set; }
-        #endregion
     }
 }

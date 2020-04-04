@@ -12,7 +12,7 @@ namespace truemuz.API.Mapping
             builder.ToTable("SongGroup");
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
-            builder.Property(p => p.Name).IsRequired().HasMaxLength(30);
+            builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
 
             builder.HasOne(x => x.History).WithOne(x => x.SongGroup).HasForeignKey<SongGroup>(x => x.HistoryId);
             builder.HasOne(x => x.Album).WithMany(x => x.SongGroups).HasForeignKey(x => x.AlbumId);
@@ -20,19 +20,33 @@ namespace truemuz.API.Mapping
 
             builder.HasData
             (
-                new SongGroup 
+                new SongGroup
                 {
-                    Id = 100,
-                    Name = "EP Group",
-                    AlbumId = 100,
-                    HistoryId = 100
+                    Id = 1,
+                    Name = "Hitchhiking the Air",
+                    AlbumId = 1,
+                    HistoryId = 1
                 },
                 new SongGroup
                 {
-                    Id = 101,
-                    Name = "Release Group",
-                    AlbumId = 101,
-                    HistoryId = 101
+                    Id = 2,
+                    Name = "Aerophobia",
+                    AlbumId = 1,
+                    HistoryId = 2
+                },
+                new SongGroup
+                {
+                    Id = 3,
+                    Name = "Chaos",
+                    AlbumId = 1,
+                    HistoryId = 3
+                },
+                new SongGroup
+                {
+                    Id = 4,
+                    Name = "Do What You Feel",
+                    AlbumId = 1,
+                    HistoryId = 4
                 }
             );
         }

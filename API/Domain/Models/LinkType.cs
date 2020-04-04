@@ -2,10 +2,10 @@
 
 namespace truemuz.API.Domain.Models
 {
-    public class LinkType: BaseModel
+    public class LinkType: Entity<int>
     {
-        #region Navigation properties
-        public ICollection<Link> Links { get; set; } = new List<Link>();
-        #endregion
+        public string Name { get; set; }
+
+        public ICollection<Link> Links { get; set; }
     }
 }
