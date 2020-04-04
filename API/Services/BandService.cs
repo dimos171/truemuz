@@ -25,11 +25,12 @@ namespace truemuz.API.Services
 
         public async Task<IEnumerable<Band>> ListAsync()
         {
-            var bands = await _cache.GetOrCreateAsync(CacheKeys.BandsList, (entry) => {
+            var bands = await _cache.GetOrCreateAsync(CacheKeys.BandsList, (entry) =>
+            {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1);
                 return _bandRepository.ListAsync();
             });
-            
+
             return bands;
         }
 

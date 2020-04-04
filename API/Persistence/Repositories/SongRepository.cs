@@ -13,28 +13,28 @@ namespace truemuz.API.Persistence.Repositories
 
         public async Task<IEnumerable<Song>> ListAsync()
         {
-            return await _context.Song.AsNoTracking().ToListAsync();
+            return await _context.Songs.AsNoTracking().ToListAsync();
         }
 
         public async Task AddAsync(Song song)
         {
-            await _context.Song.AddAsync(song);
+            await _context.Songs.AddAsync(song);
         }
 
         public async Task<Song> FindByIdAsync(int id)
         {
-            var song = await _context.Song.Include(s => s.Links).Include(s => s.SongGroup.Album.Band).FirstOrDefaultAsync(s => s.Id == id);
+            var song = await _context.Songs.Include(s => s.Links).Include(s => s.SongGroup.Album.Band).FirstOrDefaultAsync(s => s.Id == id);
             return song;
         }
 
         public void Update(Song song)
         {
-            _context.Song.Update(song);
+            _context.Songs.Update(song);
         }
 
         public void Remove(Song song)
         {
-            _context.Song.Remove(song);
+            _context.Songs.Remove(song);
         }
     }
 }

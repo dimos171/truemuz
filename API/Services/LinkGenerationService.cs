@@ -72,12 +72,12 @@ namespace truemuz.API.Services
             job = await WaitForJobToFinishAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, jobName);
 
             if (job.State == JobState.Finished)
-            { 
+            {
                 StreamingLocator locator = await CreateStreamingLocatorAsync(client, config.ResourceGroup, config.AccountName, outputAsset.Name, locatorName);
 
                 IList<string> urls = await GetStreamingUrlsAsync(client, config.ResourceGroup, config.AccountName, locator.Name);
 
-                foreach(var url in urls)
+                foreach (var url in urls)
                 {
                     int type = 0;
 
@@ -85,10 +85,13 @@ namespace truemuz.API.Services
                     else if (url.EndsWith("manifest(format=mpd-time-csf)")) type = 2;
                     else if (url.EndsWith("manifest")) type = 2;
 
-                    links.Add(new Link { Name = string.Join('/', new List<string> { bandName, albumName, songName + ".mp3" }),
-                    SongId = songId, 
-                    LinkTypeId = type != 0 ? type : throw new Exception("Unsupproted link type"),
-                    Url = url });
+                    links.Add(new Link
+                    {
+                        Name = string.Join('/', new List<string> { bandName, albumName, songName + ".mp3" }),
+                        SongId = songId,
+                        LinkTypeId = type != 0 ? type : throw new Exception("Unsupproted link type"),
+                        Url = url
+                    });
                 }
             }
             return links;

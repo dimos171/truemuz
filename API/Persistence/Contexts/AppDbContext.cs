@@ -10,15 +10,15 @@ namespace truemuz.API.Persistence.Contexts
 
         public DbSet<Album> Albums { get; set; }
 
-        public DbSet<SongGroup> SongGroup { get; set; }
+        public DbSet<SongGroup> SongGroups { get; set; }
 
-        public DbSet<History> History { get; set; }
+        public DbSet<History> Histories { get; set; }
 
-        public DbSet<Song> Song { get; set; }
+        public DbSet<Song> Songs { get; set; }
 
-        public DbSet<Link> Link { get; set; }
+        public DbSet<Link> Links { get; set; }
 
-        public DbSet<LinkType> LinkType { get; set; }
+        public DbSet<LinkType> LinkTypes { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

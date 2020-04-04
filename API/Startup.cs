@@ -50,7 +50,6 @@ namespace truemuz.API
             services.AddScoped<IBandService, BandService>();
             services.AddScoped<IAlbumService, AlbumService>();
             services.AddScoped<ISongService, SongService>();
-
             services.AddScoped<ILinkGenerationService, LinkGenerationService>();
 
             services.AddAutoMapper(typeof(Startup));

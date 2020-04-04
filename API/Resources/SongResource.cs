@@ -2,6 +2,6 @@
 {
     public class SongResource : BaseResource
     {
-        public AlbumResource Album {get; set;}
+        public AlbumResource Album { get; set; }
     }
 }
