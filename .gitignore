@@ -42,3 +42,5 @@ msbuild.wrn
 
 # Sqlite
 *.sqlite3
+/API/truemuz.sqlite3-shm
+/API/truemuz.sqlite3-wal
