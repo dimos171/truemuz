@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using truemuz.API.Infrastructure;
-using truemuz.API.Domain.Services;
-using truemuz.API.Domain.Models;
 using Microsoft.Azure.Management.Media;
 using Microsoft.Azure.Management.Media.Models;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Rest;
 using Microsoft.Rest.Azure.Authentication;
+using truemuz.API.Domain.Models;
+using truemuz.API.Domain.Services;
+using truemuz.API.Infrastructure;
+using truemuz.API.Infrastructure.Configuration;
 
 namespace truemuz.API.Services
 {
@@ -18,20 +17,32 @@ namespace truemuz.API.Services
     {
         private const string AdaptiveStreamingTransformName = "MyTransformWithAdaptiveStreamingPreset";
         private const string _blobStorage = "https://truemuz.blob.core.windows.net";
+        private LinkGeneratorConfigWrapper _configWrapper;
+
+        public LinkGenerationService()
+        {
+            _configWrapper = new LinkGeneratorConfigWrapper
+            {
+                AadClientId = LinkGeneratorConfig.AadClientId,
+                AadEndpoint = LinkGeneratorConfig.AadEndpoint,
+                AadSecret = LinkGeneratorConfig.AadSecret,
+                AadTenantId = LinkGeneratorConfig.AadTenantId,
+                AccountName = LinkGeneratorConfig.AccountName,
+                ArmAadAudience = LinkGeneratorConfig.ArmAadAudience,
+                ArmEndpoint = LinkGeneratorConfig.ArmEndpoint,
+                Region = LinkGeneratorConfig.Region,
+                ResourceGroup = LinkGeneratorConfig.ResourceGroup,
+                SubscriptionId = LinkGeneratorConfig.SubscriptionId
+            };
+        }
 
         public async Task<IEnumerable<Link>> GenerateStreamLinks(string bandName, string albumName, string songName, int songId)
         {
             IEnumerable<Link> urls = new List<Link>();
 
-            LinkGeneratorConfigWrapper config = new LinkGeneratorConfigWrapper(new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .Build().GetSection("Generator"));
-
             try
             {
-                urls = await RunAsync(config, bandName, albumName, songName, songId);
+                urls = await RunAsync(_configWrapper, bandName, albumName, songName, songId);
             }
             catch (Exception exception)
             {
@@ -44,7 +55,11 @@ namespace truemuz.API.Services
         /// <summary>
         /// Run the sample async.
         /// </summary>
-        /// <param name="config">The parm is of type ConfigWrapper. This class reads values from local configuration file.</param>
+        /// <param name="config">The param is of type ConfigWrapper. This class is a mediator for azure configuration settings.</param>
+        /// <param name="bandName"></param>
+        /// <param name="albumName"></param>
+        /// <param name="songName"></param>
+        /// <param name="songId"></param>
         /// <returns></returns>
         // <RunAsync>
         private static async Task<IEnumerable<Link>> RunAsync(LinkGeneratorConfigWrapper config, string bandName, string albumName, string songName, int songId)
@@ -102,7 +117,7 @@ namespace truemuz.API.Services
         /// Create the ServiceClientCredentials object based on the credentials
         /// supplied in local configuration file.
         /// </summary>
-        /// <param name="config">The parm is of type ConfigWrapper. This class reads values from local configuration file.</param>
+        /// <param name="config">The parm is of type ConfigWrapper. This class is a mediator for azure configuration settings.</param>
         /// <returns></returns>
         // <GetCredentialsAsync>
         private static async Task<ServiceClientCredentials> GetCredentialsAsync(LinkGeneratorConfigWrapper config)
@@ -121,7 +136,7 @@ namespace truemuz.API.Services
         /// Creates the AzureMediaServicesClient object based on the credentials
         /// supplied in local configuration file.
         /// </summary>
-        /// <param name="config">The parm is of type ConfigWrapper. This class reads values from local configuration file.</param>
+        /// <param name="config">The param is of type ConfigWrapper. This class is a mediator for azure configuration settings.</param>
         /// <returns></returns>
         // <CreateMediaServicesClient>
         private static async Task<IAzureMediaServicesClient> CreateMediaServicesClientAsync(LinkGeneratorConfigWrapper config)
@@ -216,10 +231,11 @@ namespace truemuz.API.Services
         /// <param name="transformName">The name of the transform.</param>
         /// <param name="outputAssetName">The (unique) name of the  output asset that will store the result of the encoding job. </param>
         /// <param name="jobName">The (unique) name of the job.</param>
+        /// <param name="filePath"></param>
         /// <returns></returns>
         // <SubmitJob>
         private static async Task<Job> SubmitJobAsync(IAzureMediaServicesClient client,
-            string resourceGroup,
+            string resourceGroupName,
             string accountName,
             string transformName,
             string outputAssetName,
@@ -242,7 +258,7 @@ namespace truemuz.API.Services
             // to get the existing job. In Media Services v3, Get methods on entities returns null 
             // if the entity doesn't exist (a case-insensitive check on the name).
             Job job = await client.Jobs.CreateAsync(
-                resourceGroup,
+                resourceGroupName,
                 accountName,
                 transformName,
                 jobName,
@@ -305,13 +321,13 @@ namespace truemuz.API.Services
         // <CreateStreamingLocator>
         private static async Task<StreamingLocator> CreateStreamingLocatorAsync(
             IAzureMediaServicesClient client,
-            string resourceGroup,
+            string resourceGroupName,
             string accountName,
             string assetName,
             string locatorName)
         {
             StreamingLocator locator = await client.StreamingLocators.CreateAsync(
-                resourceGroup,
+                resourceGroupName,
                 accountName,
                 locatorName,
                 new StreamingLocator
@@ -339,7 +355,7 @@ namespace truemuz.API.Services
             IAzureMediaServicesClient client,
             string resourceGroupName,
             string accountName,
-            String locatorName)
+            string locatorName)
         {
             const string DefaultStreamingEndpointName = "default";
 

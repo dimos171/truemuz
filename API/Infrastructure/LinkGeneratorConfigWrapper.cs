@@ -1,66 +1,27 @@
 ﻿using System;
 
-using Microsoft.Extensions.Configuration;
-
 namespace truemuz.API.Infrastructure
 {
     public class LinkGeneratorConfigWrapper
     {
-        private readonly IConfiguration _config;
+        public string AadClientId { get; set; }
 
-        public LinkGeneratorConfigWrapper(IConfiguration config)
-        {
-            _config = config;
-        }
+        public Uri AadEndpoint { get; set; }
 
-        public string SubscriptionId
-        {
-            get { return _config["SubscriptionId"]; }
-        }
+        public string AadSecret { get; set; }
 
-        public string ResourceGroup
-        {
-            get { return _config["ResourceGroup"]; }
-        }
+        public string AadTenantId { get; set; }
 
-        public string AccountName
-        {
-            get { return _config["AccountName"]; }
-        }
+        public string AccountName { get; set; }
 
-        public string AadTenantId
-        {
-            get { return _config["AadTenantId"]; }
-        }
+        public Uri ArmAadAudience { get; set; }
 
-        public string AadClientId
-        {
-            get { return _config["AadClientId"]; }
-        }
+        public Uri ArmEndpoint { get; set; }
 
-        public string AadSecret
-        {
-            get { return _config["AadSecret"]; }
-        }
+        public string Region { get; set; }
 
-        public Uri ArmAadAudience
-        {
-            get { return new Uri(_config["ArmAadAudience"]); }
-        }
+        public string ResourceGroup { get; set; }
 
-        public Uri AadEndpoint
-        {
-            get { return new Uri(_config["AadEndpoint"]); }
-        }
-
-        public Uri ArmEndpoint
-        {
-            get { return new Uri(_config["ArmEndpoint"]); }
-        }
-
-        public string Region
-        {
-            get { return _config["Region"]; }
-        }
+        public string SubscriptionId { get; set; }
     }
 }
