@@ -25,7 +25,7 @@ namespace truemuz.API.Mapping
                 new Album
                 {
                     Id = 1,
-                    Name = "Do What You Feel",
+                    Name = "DoWhatYouFeel",
                     Year = 2018,
                     Image = "Logo black.jpg",
                     BandId = 1,                    

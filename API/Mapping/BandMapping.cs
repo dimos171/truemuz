@@ -18,7 +18,7 @@ namespace truemuz.API.Mapping
 
             builder.HasData
             (
-                new Band { Id = 1, Name = "Modernova" }
+                new Band { Id = 1, Name = "modernova" }
             );
         }
     }

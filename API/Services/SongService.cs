@@ -27,7 +27,7 @@ namespace truemuz.API.Services
 
             if (song.Links == null || song.Links.Count == 0)
             {
-                var links = await _linkGenerationService.GenerateStreamLinks(song.SongGroup.Album.Band.Name, song.SongGroup.Album.Name, song.Name, songId);
+                var links = await _linkGenerationService.GenerateStreamLinks(song.SongGroup.Album.Band.Name, song.SongGroup.Album.Name, song.FileName, songId);
 
                 foreach (var link in links)
                 {

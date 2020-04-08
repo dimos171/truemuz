@@ -15,6 +15,13 @@ namespace truemuz.API.Mapping
             builder.Property(p => p.Name).IsRequired().HasMaxLength(30);
 
             builder.HasMany(p => p.Links).WithOne(p => p.LinkType).HasForeignKey(p => p.LinkTypeId);
+
+            builder.HasData
+            (
+                new LinkType { Id = 1, Name = "Hls" },
+                new LinkType { Id = 2, Name = "Dash"},
+                new LinkType { Id = 3, Name = "Smooth"}
+            );
         }
     }
 }

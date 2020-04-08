@@ -36,13 +36,13 @@ namespace truemuz.API.Services
             };
         }
 
-        public async Task<IEnumerable<Link>> GenerateStreamLinks(string bandName, string albumName, string songName, int songId)
+        public async Task<IEnumerable<Link>> GenerateStreamLinks(string bandName, string albumName, string songFileName, int songId)
         {
             IEnumerable<Link> urls = new List<Link>();
 
             try
             {
-                urls = await RunAsync(_configWrapper, bandName, albumName, songName, songId);
+                urls = await RunAsync(_configWrapper, bandName, albumName, songFileName, songId);
             }
             catch (Exception exception)
             {
@@ -58,11 +58,11 @@ namespace truemuz.API.Services
         /// <param name="config">The param is of type ConfigWrapper. This class is a mediator for azure configuration settings.</param>
         /// <param name="bandName"></param>
         /// <param name="albumName"></param>
-        /// <param name="songName"></param>
+        /// <param name="songFileName"></param>
         /// <param name="songId"></param>
         /// <returns></returns>
         // <RunAsync>
-        private static async Task<IEnumerable<Link>> RunAsync(LinkGeneratorConfigWrapper config, string bandName, string albumName, string songName, int songId)
+        private static async Task<IEnumerable<Link>> RunAsync(LinkGeneratorConfigWrapper config, string bandName, string albumName, string songFileName, int songId)
         {
             IAzureMediaServicesClient client = await CreateMediaServicesClientAsync(config);
 
@@ -80,7 +80,7 @@ namespace truemuz.API.Services
             Asset outputAsset = await CreateOutputAssetAsync(client, config.ResourceGroup, config.AccountName, outputAssetName);
 
             // TODO: Add format 
-            var filePath = string.Join('/', new List<string> { _blobStorage, bandName, albumName, songName + ".mp3" });
+            var filePath = string.Join('/', new List<string> { _blobStorage, bandName, albumName, songFileName });
 
             Job job = await SubmitJobAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, outputAsset.Name, jobName, filePath);
 
@@ -98,11 +98,11 @@ namespace truemuz.API.Services
 
                     if (url.EndsWith("manifest(format=m3u8-aapl)")) type = 1;
                     else if (url.EndsWith("manifest(format=mpd-time-csf)")) type = 2;
-                    else if (url.EndsWith("manifest")) type = 2;
+                    else if (url.EndsWith("manifest")) type = 3;
 
                     links.Add(new Link
                     {
-                        Name = string.Join('/', new List<string> { bandName, albumName, songName + ".mp3" }),
+                        Name = string.Join('/', new List<string> { bandName, albumName, songFileName + ".mp3" }),
                         SongId = songId,
                         LinkTypeId = type != 0 ? type : throw new Exception("Unsupproted link type"),
                         Url = url
