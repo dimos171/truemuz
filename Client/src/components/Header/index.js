@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IoIosSearch } from "react-icons/io";
 
 import './index.scss';
 
-export default function Header(props) {
+export default function Header() {
   return (
     <header className="header-container px-5">
       <div className="header-container-filler"></div>

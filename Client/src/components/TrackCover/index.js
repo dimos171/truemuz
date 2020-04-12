@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import cover from '../../../public/images/retro_background.jpg';
 import avatar from '../../../public/images/img_avatar.png';
 import './index.scss';
 
-export default function TrackCover(props) {
+export default function TrackCover() {
   return (
     <div className="col-2 px-0 mt-3 pt-2">
       <div className="d-flex align-items-center justify-content-center mb-5 pb-3">

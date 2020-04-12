@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import './index.scss';
 
-export default function TrackDescription(props) {
+export default function TrackDescription() {
   return (
     <div className="col-4 offset-1 px-0 mt-3 pt-2">
       <div>

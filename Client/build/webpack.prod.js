@@ -17,8 +17,8 @@ module.exports = {
         exclude: /node_modules/,
         options: {
           emitWarning: true,
-          configFile: './.eslintrc'
-        }
+          configFile: './.eslintrc',
+        },
       },
       {
         test: /\.(js|jsx)$/,
@@ -55,7 +55,7 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'fonts/'
+              outputPath: 'fonts/',
             },
           },
         ],
@@ -63,7 +63,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.js']
+    extensions: ['.js'],
   },
   plugins: [
     new CleanWebpackPlugin(),

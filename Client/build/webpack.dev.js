@@ -24,8 +24,8 @@ module.exports = {
         exclude: /node_modules/,
         options: {
           emitWarning: true,
-          configFile: './.eslintrc'
-        }
+          configFile: './.eslintrc',
+        },
       },
       {
         test: /\.(js|jsx)$/,
@@ -37,7 +37,7 @@ module.exports = {
         use: [
           {
             loader: 'html-loader',
-          }
+          },
         ],
       },
       {
@@ -62,7 +62,7 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'fonts/'
+              outputPath: 'fonts/',
             },
           },
         ],
@@ -78,6 +78,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
       hash: true,
-    })
+    }),
   ],
 };

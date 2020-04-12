@@ -5,17 +5,24 @@ import { MdSkipNext, MdSkipPrevious } from "react-icons/md";
 import { GiPauseButton } from "react-icons/gi";
 import { FiRepeat } from "react-icons/fi";
 import { IoIosVolumeHigh, IoIosPlay } from "react-icons/io";
+import Slider from '@material-ui/core/Slider';
 
 import './index.scss';
 
 Player.propTypes = {
   isPlaying: PropTypes.bool,
   activeTrack: PropTypes.object,
+  volume: PropTypes.number,
   changeIsPlaying: PropTypes.func,
+  changeVolume: PropTypes.func,
 };
 
 export default function Player(props) {
   const handlePlayClick = () => props.changeIsPlaying(!props.isPlaying);
+
+  const getVolumeForSlider = () => props.volume * 100;
+
+  const handleChangeVolume = (event, changedVolume) => props.changeVolume(changedVolume / 100);
 
   const getActiveTrackName = () => props.activeTrack
     ? props.activeTrack.name
@@ -45,8 +52,14 @@ export default function Player(props) {
             <MdSkipNext className="icon mx-3" size="1.3em" />
           </div>
 
-          <div className="col-5 p-0">
-            <IoIosVolumeHigh className="icon mx-3" size="1.2em" />
+          <div className="d-flex align-items-center col-2 offset-1 p-0">
+            <IoIosVolumeHigh className="icon mr-3" size="1.2em" />
+            <Slider
+              aria-labelledby="continuous-slider"
+              className="volume-slider"
+              value={getVolumeForSlider()}
+              onChange={handleChangeVolume}
+            />
           </div>
         </div>
       </div>

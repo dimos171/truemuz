@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import TrackGroup from './TrackGroup';
@@ -8,11 +8,15 @@ const trackGroups = [
     name: 'Hitchhiking the Air #1',
     length: '03:21',
     id: '1',
+    url: "//amssamples.streaming.mediaservices.windows.net/bddc6db2-3f95-4137-872a-b62a6c19e891/ElephantsDreamAudio.mp3",
+    type: "audio/mp3",
     alternativeTracks: [ 
       {
         name: 'Alternative track #2',
         length: '03:20',
         id: '2',
+        url: "//ampdemolive-usct.streaming.media.azure.net/1f48130b-a059-42ac-9595-501b0824188d/85306180-5146-44e7-91e8-2be2529f7528.ism/manifest",
+        type: "application/vnd.ms-sstr+xml",
       },
       {
         name: 'Alternative track #3',
