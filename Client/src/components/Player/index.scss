@@ -3,7 +3,7 @@
 .player-container {
   position: fixed;
   bottom: 0;
-  height: 100px;
+  height: 146px;
   left: 0rem;
   right: 0rem;
   z-index: 1000;
@@ -23,4 +23,8 @@
 .volume-slider {
   color: $main-dark-theme-volume-slider-color !important;
   width: 110px !important;
+}
+
+.waveform-container {
+  height: 30px;
 }

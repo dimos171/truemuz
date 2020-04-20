@@ -17,20 +17,24 @@ export default function App() {
   return (
     <div className="root-container mx-5">
       <Header />
-      <Player
-        isPlaying={isPlaying}
-        activeTrack={activeTrack}
-        volume={volume}
-        changeIsPlaying={setIsPlaying}
-        changeVolume={setVolume}
-      />
+      <div>
+        {activeTrack && (
+          <Player
+            isPlaying={isPlaying}
+            activeTrack={activeTrack}
+            volume={volume}
+            changeIsPlaying={setIsPlaying}
+            changeVolume={setVolume}
+          />
+        )}
+      </div>
       <AzureMediaPlayer
         isPlaying={isPlaying}
         activeTrack={activeTrack}
         volume={volume}
       />
 
-      <div className="partial-view-container d-flex">
+      <div className={`partial-view-container d-flex ${activeTrack ? 'visible-header' : ''}`}>
         <Switch>
           <Route path="/">
             <Playlist

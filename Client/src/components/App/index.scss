@@ -6,7 +6,11 @@
 
   .partial-view-container {
     padding-top: 100px;
-    padding-bottom: 100px;
+    padding-bottom: 24px;
     overflow-y: visible;
+  }
+
+  .visible-header {
+    padding-bottom: 150px;
   }
 }

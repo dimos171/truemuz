@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FaRandom } from "react-icons/fa";
 import { MdSkipNext, MdSkipPrevious } from "react-icons/md";
@@ -7,6 +7,7 @@ import { FiRepeat } from "react-icons/fi";
 import { IoIosVolumeHigh, IoIosPlay } from "react-icons/io";
 import Slider from '@material-ui/core/Slider';
 
+import WaveformChart from '../WaveformChart';
 import './index.scss';
 
 Player.propTypes = {
@@ -18,6 +19,9 @@ Player.propTypes = {
 };
 
 export default function Player(props) {
+  const waveformContainerRef = useRef(null);
+  const [waveformContainerDimensions, setWaveformContainerDimensions] = useState({ width: 0, height: 0 });
+
   const handlePlayClick = () => props.changeIsPlaying(!props.isPlaying);
 
   const getVolumeForSlider = () => props.volume * 100;
@@ -32,10 +36,32 @@ export default function Player(props) {
     ? <GiPauseButton className="icon mx-3" size="1.3em" onClick={handlePlayClick} />
     : <IoIosPlay className="icon mx-3" size="1.3em" onClick={handlePlayClick} />;
 
+  useEffect(() => {
+    if (waveformContainerRef.current) {
+      setWaveformContainerDimensions({
+        width: waveformContainerRef.current.offsetWidth,
+        height: waveformContainerRef.current.offsetHeight,
+      });
+    }
+  }, [waveformContainerRef]);
+
   return (
     <div className="player-container px-5">
       <div className="player-container-content pt-3">
-        <div className="text-center active-track">
+        <div
+          ref={waveformContainerRef}
+          className="waveform-container"
+        >
+          {(waveformContainerDimensions.width > 0 && waveformContainerDimensions.height > 0) && (
+            <WaveformChart
+              width={waveformContainerDimensions.width}
+              height={waveformContainerDimensions.height}
+              activeTrack={props.activeTrack}
+            />
+          )}
+        </div>
+
+        <div className="text-center active-track pt-3">
           {getActiveTrackName()}
         </div>
 

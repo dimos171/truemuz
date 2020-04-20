@@ -9,3 +9,9 @@ $main-dark-theme-active-track-background-sub: rgba(138, 86, 179, 0.24);
 $main-dark-theme-active-track-shadow: rgba(22, 22, 22, 0.25);
 $main-dark-theme-collapsed-track-background: #2b2828;
 $main-dark-theme-volume-slider-color: #8437E4;
+$main-dark-theme-waveform-active-bar-color: #5A1EA6;
+
+:export {
+  waveformBarDefaultColor: $main-dark-theme-text-color;
+  waveformBarHoveredBarColor: $main-dark-theme-waveform-active-bar-color;
+}

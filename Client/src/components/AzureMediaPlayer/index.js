@@ -50,6 +50,8 @@ export default function AzureMediaPlayer(props) {
 
   useEffect(() => {
     if (player) {
+      // var whereYouAt = player.currentTime();
+
       if (props.isPlaying) {
         player.play();
       } else {
