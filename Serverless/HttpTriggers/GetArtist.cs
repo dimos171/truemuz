@@ -12,8 +12,7 @@ using System.Security.Authentication;
 namespace HttpTriggers
 {
     public static class GetArtist
-    {
-        private const string COSMOS_CONNECTION_STRING = @"mongodb://truemuz-cosmos-db:v3LRrCJpWIG9irE4RbPKFSH3D16W2xE05pmViJGyM3XOk5YrZOe7wRNFAZLXrIquIGfglzkBKfd4njVfvW9TlA==@truemuz-cosmos-db.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@truemuz-cosmos-db@";
+    {        
         private const string ATLAS_CONNECTION_STRING = "mongodb+srv://truemuz:12345@truemuz-xd4d1.azure.mongodb.net/test?retryWrites=true&w=majority";
 
         private const string DB_NAME = "truemuzdb";
@@ -26,7 +25,7 @@ namespace HttpTriggers
         {
             try
             {
-                MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(COSMOS_CONNECTION_STRING));
+                MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(ATLAS_CONNECTION_STRING));
                 settings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
                 var mongoClient = new MongoClient(settings);
 
