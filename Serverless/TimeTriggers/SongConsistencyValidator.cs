@@ -1,19 +1,12 @@
 using System;
-using System.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 using System.Security.Authentication;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-using Newtonsoft.Json;
 using System.Linq;
 using Microsoft.Azure.Management.Media;
 using Microsoft.Azure.Management.Media.Models;
@@ -29,7 +22,7 @@ namespace TimeTriggers
 
         private const string DB_NAME = "truemuzdb";
         private const string ARTIST_COLLECTION_NAME = "artist";
-        private const string AdaptiveStreamingTransformName = "MyTransformWithAdaptiveStreamingPreset";
+        private const string AuidioTransformName = "MyTransformWithHighQualityAudioPreset";
         private const string _blobStorage = "https://truemuz.blob.core.windows.net/songs";
         private static ConfigWrapper config = new ConfigWrapper(
                 Environment.GetEnvironmentVariable("SubscriptionId"),
@@ -57,21 +50,30 @@ namespace TimeTriggers
                 var collection = database.GetCollection<BsonDocument>(ARTIST_COLLECTION_NAME);
                 var artistsBsonList = await collection.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync();
 
-                var linksToAdd = await Validate(artistsBsonList);
+                List<Artist> artists = new List<Artist>();
+                foreach (var bson in artistsBsonList)
+                {
+                    var artist = BsonSerializer.Deserialize<Artist>(bson.ToJson());
+                    artists.Add(artist);
+                }
+
+                var linksToAdd = await Validate(artists);
 
                 foreach (var link in linksToAdd)
                 {
-                    var filter3 = Builders<BsonDocument>.Filter.Eq("name", link.artistName)
-                        & Builders<BsonDocument>.Filter.Eq("albums.name", link.albumName)
-                        & Builders<BsonDocument>.Filter.Eq("albums.song-groups.name", link.songGroupName)
-                        & Builders<BsonDocument>.Filter.Eq("albums.song-groups.songs.blob-name", link.blobName);
+                    var filter = Builders<BsonDocument>.Filter.Eq("name", link.artistName);
 
                     var bsonArray = new BsonArray();
                     bsonArray.AddRange(link.links.Select(l => new BsonDocument { { "type", l.Type.ToString() }, { "url", l.Url } }));
-                    
-                    var update = Builders<BsonDocument>.Update.Set("albums.song-groups.songs.$.stream-links", bsonArray);
 
-                    collection.UpdateOne(filter3, update);
+                    var albumIndex = artists.Where(ar => ar.Name == link.artistName).FirstOrDefault().Albums.ToList().FindIndex(al => al.Name == link.albumName);
+                    var songGroupIndex = artists.Where(ar => ar.Name == link.artistName).FirstOrDefault().Albums.Where(al => al.Name == link.albumName).FirstOrDefault().SongGroups.ToList().FindIndex(sg => sg.Name == link.songGroupName);
+                    var songIndex = artists.Where(ar => ar.Name == link.artistName).FirstOrDefault().Albums.Where(al => al.Name == link.albumName).FirstOrDefault().SongGroups.Where(sg => sg.Name == link.songGroupName).FirstOrDefault().Songs.ToList().FindIndex(s => s.BlobName == link.blobName);
+
+
+                    var update = Builders<BsonDocument>.Update.Set($"albums.{albumIndex}.song-groups.{songGroupIndex}.songs.{songIndex}.stream-links", bsonArray);
+
+                    collection.UpdateOne(filter, update);
                 }
             }
             catch (Exception e)
@@ -81,16 +83,8 @@ namespace TimeTriggers
             }
         }
 
-        private static async Task<IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, IEnumerable<Link> links)>> Validate(IEnumerable<BsonDocument> artistsBsonList)
+        private static async Task<IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, IEnumerable<Link> links)>> Validate(List<Artist> artists)
         {
-            List<Artist> artists = new List<Artist>();
-
-            foreach (var bson in artistsBsonList)
-            {
-                var artist = BsonSerializer.Deserialize<Artist>(bson.ToJson());
-                artists.Add(artist);
-            }
-
             IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, string format)> songsWithoutLinks = artists.SelectMany(ar => ar.Albums
                 .SelectMany(al => al.SongGroups
                 .SelectMany(sg => sg.Songs.Where(s => s.StreamLinks.Count() == 0)
@@ -120,13 +114,13 @@ namespace TimeTriggers
             string locatorName = $"{uniqueness}-locator";
             string outputAssetName = $"{uniqueness}-asset";
 
-            Transform transform = await GetOrCreateTransformAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName);
+            Transform transform = await GetOrCreateTransformAsync(client, config.ResourceGroup, config.AccountName, AuidioTransformName);
 
             Asset outputAsset = await CreateOutputAssetAsync(client, config.ResourceGroup, config.AccountName, outputAssetName);
 
-            Job job = await SubmitJobAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, outputAsset.Name, jobName, fileName);
+            Job job = await SubmitJobAsync(client, config.ResourceGroup, config.AccountName, AuidioTransformName, outputAsset.Name, jobName, fileName);
 
-            job = await WaitForJobToFinishAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, jobName);
+            job = await WaitForJobToFinishAsync(client, config.ResourceGroup, config.AccountName, AuidioTransformName, jobName);
 
             if (job.State == JobState.Finished)
             {
@@ -188,7 +182,7 @@ namespace TimeTriggers
                     {
                         Preset = new BuiltInStandardEncoderPreset()
                         {
-                            PresetName = EncoderNamedPreset.AdaptiveStreaming
+                            PresetName = EncoderNamedPreset.AACGoodQualityAudio
                         }
                     }
                 };
