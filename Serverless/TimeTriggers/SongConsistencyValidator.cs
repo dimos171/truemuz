@@ -38,7 +38,7 @@ namespace TimeTriggers
             );
 
         [FunctionName("SongConsistencyValidator")]
-        public static async Task Run([TimerTrigger("*/30 * * * *")]TimerInfo myTimer, ILogger log)
+        public static async Task Run([TimerTrigger("0 0 * * * *")]TimerInfo myTimer, ILogger log)
         {
             try
             {
