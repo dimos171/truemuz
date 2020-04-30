@@ -6,38 +6,52 @@ import loadLibrary from './load-amp-library';
 AzureMediaPlayer.propTypes = {
   activeTrack: PropTypes.object,
   volume: PropTypes.number,
+  forcedCurrentPlayTime: PropTypes.number,
   isPlaying: PropTypes.bool,
+  changeCurrentPlayTime: PropTypes.func,
 };
 
 export default function AzureMediaPlayer(props) {
   const playerDomRef = useRef(null);
   const [player, setPlayer] = useState(null);
-
-  const loadAmpLibrary = async () => {
-    await loadLibrary();
-
-    const settings = {
-      controls: false,
-      autoplay: false,
-      nativeControlsForTouch: false,
-      width: '0',
-      height: '0',
-      poster: '',
-    };
-
-    setPlayer(window.amp(playerDomRef.current, settings));
-  };
-
-  const disposePlayer = () => {
-    player && player.dispose();
-  };
+  const { changeCurrentPlayTime } = props;
 
   useEffect(() => {
+    const loadAmpLibrary = async () => {
+      await loadLibrary();
+  
+      const settings = {
+        controls: false,
+        autoplay: false,
+        nativeControlsForTouch: false,
+        width: '0',
+        height: '0',
+        poster: '',
+      };
+  
+      setPlayer(window.amp(playerDomRef.current, settings));
+    };
+
+    const handleTimeChange = () => {
+      // changeCurrentPlayTime(Math.floor(player.currentTime()));
+      changeCurrentPlayTime(player.currentTime());
+    };
+
+    const disposeResourses = () => {
+      if (player) {
+        player.removeEventListener('timeupdate', handleTimeChange);
+        player.dispose();
+      }
+    };
+
     loadAmpLibrary();
 
-    // todo: google workaround about eslint warning or approach
-    return disposePlayer;
-  }, []);
+    if (player) {
+      player.addEventListener('timeupdate', handleTimeChange);
+    }
+
+    return disposeResourses;
+  }, [player, changeCurrentPlayTime]);
 
   useEffect(() => {
     if (props.activeTrack && player) {
@@ -50,8 +64,6 @@ export default function AzureMediaPlayer(props) {
 
   useEffect(() => {
     if (player) {
-      // var whereYouAt = player.currentTime();
-
       if (props.isPlaying) {
         player.play();
       } else {
@@ -65,6 +77,12 @@ export default function AzureMediaPlayer(props) {
       player.volume(props.volume);
     }
   }, [props.volume, player]);
+
+  useEffect(() => {
+    if (player && props.forcedCurrentPlayTime >= 0) {
+      player.currentTime(props.forcedCurrentPlayTime);
+    }
+  }, [props.forcedCurrentPlayTime, player]);
   
   return (
     <video

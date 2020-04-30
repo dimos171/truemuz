@@ -14,8 +14,10 @@ Player.propTypes = {
   isPlaying: PropTypes.bool,
   activeTrack: PropTypes.object,
   volume: PropTypes.number,
+  currentPlayTime: PropTypes.number,
   changeIsPlaying: PropTypes.func,
   changeVolume: PropTypes.func,
+  setForcedCurrentPlayTime: PropTypes.func,
 };
 
 export default function Player(props) {
@@ -28,13 +30,17 @@ export default function Player(props) {
 
   const handleChangeVolume = (event, changedVolume) => props.changeVolume(changedVolume / 100);
 
-  const getActiveTrackName = () => props.activeTrack
-    ? props.activeTrack.name
-    : '<Empty placeholder>';
-
   const getPausePlayIcon = () => props.isPlaying
     ? <GiPauseButton className="icon mx-3" size="1.3em" onClick={handlePlayClick} />
     : <IoIosPlay className="icon mx-3" size="1.3em" onClick={handlePlayClick} />;
+
+  const secondsToMinutesFormat = (seconds) => Math.floor(seconds / 60) + ':' + ('0' + Math.floor(seconds % 60)).slice(-2);
+
+  // const secondsToMinutesFormat = (time) => {
+  //   const minutes = '0' + Math.floor(time / 60);
+  //   var seconds = '0' + (time - minutes * 60);
+  //   return minutes.substr(-2) + ':' + seconds.substr(-2);
+  // };
 
   useEffect(() => {
     if (waveformContainerRef.current) {
@@ -57,12 +63,22 @@ export default function Player(props) {
               width={waveformContainerDimensions.width}
               height={waveformContainerDimensions.height}
               activeTrack={props.activeTrack}
+              currentPlayTime={props.currentPlayTime}
+              setForcedCurrentPlayTime={props.setForcedCurrentPlayTime}
             />
           )}
         </div>
 
-        <div className="text-center active-track pt-3">
-          {getActiveTrackName()}
+        <div className="d-flex justify-content-between active-track pt-3">
+          <div className="current-time">
+            {secondsToMinutesFormat(props.currentPlayTime)}
+          </div>
+          <div>
+            {props.activeTrack.name}
+          </div>
+          <div className="total-time">
+            {secondsToMinutesFormat(props.activeTrack.length)}
+          </div>
         </div>
 
         <div className="d-flex align-items-center py-3">

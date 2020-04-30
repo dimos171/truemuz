@@ -6,7 +6,9 @@ import styles from  '../../shared/variables/_colors.scss';
 WaveformChart.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
+  currentPlayTime: PropTypes.number,
   activeTrack: PropTypes.object,
+  setForcedCurrentPlayTime: PropTypes.func,
 };
 
 const MOUSE_MOVE_THRESHOLD = 30;
@@ -68,6 +70,14 @@ export default function WaveformChart(props) {
     canvasCtx.stroke();
   };
 
+  const handleMouseClick = (event) => {
+    const clickPositionX = event.clientX - event.target.offsetLeft;
+    const playedPercentage = clickPositionX / props.width;
+    const playtime = props.activeTrack.length * playedPercentage;
+
+    props.setForcedCurrentPlayTime(playtime);
+  };
+
   const getAverageSampleForWaveform = (sample, chunksCount) => {
     const chunkedArray = [];
     const basedChunkLength = Math.ceil(sample.length / chunksCount);
@@ -101,22 +111,32 @@ export default function WaveformChart(props) {
   };
 
   useEffect(() => {
-    const canvasCtx = setupCanvas(DEFAULT_BAR_COLOR);
+    const canvasCtx = setupCanvas(HOVERED_BAR_COLOR);
     const barsCount = Math.floor(props.width / BARS_OFFSET);
+    const alreadyPlayedBarsCount = Math.floor((props.currentPlayTime / props.activeTrack.length) * barsCount);
+    let x = BAR_WIDTH;
     waveformData.current = getAverageSampleForWaveform(props.activeTrack.waveform, barsCount);
 
-    for (let index = 0, x = BAR_WIDTH; index < barsCount; index++, x += BARS_OFFSET) {
+    for (let index = 0; index < alreadyPlayedBarsCount; index++, x += BARS_OFFSET) {
+      drawLine(canvasCtx, x, props.height, waveformData.current[index]);
+    }
+
+    canvasCtx.strokeStyle = DEFAULT_BAR_COLOR;
+
+    for (let index = alreadyPlayedBarsCount; index < barsCount; index++, x += BARS_OFFSET) {
       drawLine(canvasCtx, x, props.height, waveformData.current[index]);
     }
   });
 
   return (
     <canvas
+      className='icon'
       ref={canvasRef}
       width={props.width}
       height={props.height}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onClick={handleMouseClick}
+      // onMouseMove={handleMouseMove}
+      // onMouseLeave={handleMouseLeave}
     ></canvas>
   );
 }
