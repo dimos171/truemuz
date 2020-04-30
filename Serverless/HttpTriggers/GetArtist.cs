@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Security.Authentication;
+using MongoDB.Bson.IO;
+using Newtonsoft.Json.Linq;
 
 namespace HttpTriggers
 {
@@ -32,9 +34,12 @@ namespace HttpTriggers
                 var database = mongoClient.GetDatabase(DB_NAME);
                 var collection = database.GetCollection<BsonDocument>(ARTIST_COLLECTION_NAME);
                 var filter = new BsonDocument("name", name);
-                var artists = await collection.Find(filter).ToListAsync();
+                var doc = await collection.Find(filter).FirstOrDefaultAsync();
 
-                return new OkObjectResult(artists[0]);
+                var jsonWriterSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
+                JObject json = JObject.Parse(doc.ToJson(jsonWriterSettings));
+
+                return new OkObjectResult(json);
             }
             catch (Exception e)
             {
