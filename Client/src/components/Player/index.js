@@ -8,6 +8,7 @@ import { IoIosVolumeHigh, IoIosPlay } from "react-icons/io";
 import Slider from '@material-ui/core/Slider';
 
 import WaveformChart from '../WaveformChart';
+import { secondsToMinutesFormat } from '../../shared/utilities';
 import './index.scss';
 
 Player.propTypes = {
@@ -33,14 +34,6 @@ export default function Player(props) {
   const getPausePlayIcon = () => props.isPlaying
     ? <GiPauseButton className="icon mx-3" size="1.3em" onClick={handlePlayClick} />
     : <IoIosPlay className="icon mx-3" size="1.3em" onClick={handlePlayClick} />;
-
-  const secondsToMinutesFormat = (seconds) => Math.floor(seconds / 60) + ':' + ('0' + Math.floor(seconds % 60)).slice(-2);
-
-  // const secondsToMinutesFormat = (time) => {
-  //   const minutes = '0' + Math.floor(time / 60);
-  //   var seconds = '0' + (time - minutes * 60);
-  //   return minutes.substr(-2) + ':' + seconds.substr(-2);
-  // };
 
   useEffect(() => {
     if (waveformContainerRef.current) {
@@ -77,7 +70,7 @@ export default function Player(props) {
             {props.activeTrack.name}
           </div>
           <div className="total-time">
-            {secondsToMinutesFormat(props.activeTrack.length)}
+            {secondsToMinutesFormat(props.activeTrack.duration)}
           </div>
         </div>
 

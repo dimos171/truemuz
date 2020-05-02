@@ -5,6 +5,7 @@ import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { AiOutlineEllipsis } from "react-icons/ai";
 import { IoIosPlay } from "react-icons/io";
 
+import { secondsToMinutesFormat } from '../../../shared/utilities';
 import "./index.scss";
 
 Track.propTypes = {
@@ -59,7 +60,7 @@ export default function Track(props) {
         {props.mainVersion && getContentBasedOnAlternatives()}
 
         <div className="mr-5 track-length">
-          {props.track.length}
+          {secondsToMinutesFormat(props.track.duration)}
         </div>
 
         <AiOutlineEllipsis className="icon track-additional-options-icon" size="1.3em" />

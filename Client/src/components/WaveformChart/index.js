@@ -16,17 +16,20 @@ const BARS_OFFSET = 4;
 const BAR_WIDTH = 2;
 const DEFAULT_BAR_COLOR = styles.waveformBarDefaultColor;
 const HOVERED_BAR_COLOR = styles.waveformBarHoveredBarColor;
+const ACTIVE_BAR_COLOR = styles.waveformBarActiveBarColor;
 
 export default function WaveformChart(props) {
   const canvasRef = useRef(null);
   const waveformData = useRef(null);
   let lastMouseMoveTime = 0;
+  let hoveredBarsCount = 0;
+  let isCursorOnWaveform = false;
 
   const handleMouseMove = (event) => {
     const now = +new Date;
 
     if (now - lastMouseMoveTime > MOUSE_MOVE_THRESHOLD) {
-      const canvasCtx = setupCanvas(HOVERED_BAR_COLOR);
+      const canvasCtx = setupCanvas(ACTIVE_BAR_COLOR);
       const barsCount = Math.floor(props.width / BARS_OFFSET);
       const coloredBarsCount = Math.floor(event.nativeEvent.offsetX / BARS_OFFSET);
       let x = BAR_WIDTH;
@@ -42,6 +45,8 @@ export default function WaveformChart(props) {
       }
 
       lastMouseMoveTime = now;
+      hoveredBarsCount = coloredBarsCount;
+      isCursorOnWaveform = true;
     }
   };
 
@@ -73,7 +78,7 @@ export default function WaveformChart(props) {
   const handleMouseClick = (event) => {
     const clickPositionX = event.clientX - event.target.offsetLeft;
     const playedPercentage = clickPositionX / props.width;
-    const playtime = props.activeTrack.length * playedPercentage;
+    const playtime = props.activeTrack.duration * playedPercentage;
 
     props.setForcedCurrentPlayTime(playtime);
   };
@@ -111,9 +116,9 @@ export default function WaveformChart(props) {
   };
 
   useEffect(() => {
-    const canvasCtx = setupCanvas(HOVERED_BAR_COLOR);
+    const canvasCtx = setupCanvas(ACTIVE_BAR_COLOR);
     const barsCount = Math.floor(props.width / BARS_OFFSET);
-    const alreadyPlayedBarsCount = Math.floor((props.currentPlayTime / props.activeTrack.length) * barsCount);
+    const alreadyPlayedBarsCount = Math.floor((props.currentPlayTime / props.activeTrack.duration) * barsCount);
     let x = BAR_WIDTH;
     waveformData.current = getAverageSampleForWaveform(props.activeTrack.waveform, barsCount);
 

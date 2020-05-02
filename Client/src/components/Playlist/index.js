@@ -3,83 +3,29 @@ import PropTypes from 'prop-types';
 
 import TrackGroup from './TrackGroup';
 
-const generateWaveformSample = () => {
-  const array = [];
-
-  for (let i = 0; i < 1000; i++) {
-    array[i] = Math.random();
-  }
-
-  return array;
-};
-
-const trackGroups = [
-  { 
-    name: 'Hitchhiking the Air #1',
-    length: 210,
-    id: '1',
-    url: "//amssamples.streaming.mediaservices.windows.net/bddc6db2-3f95-4137-872a-b62a6c19e891/ElephantsDreamAudio.mp3",
-    type: "audio/mp3",
-    waveform: generateWaveformSample(),
-    alternativeTracks: [ 
-      {
-        name: 'Alternative track #2',
-        length: 215,
-        id: '2',
-        url: "//ampdemolive-usct.streaming.media.azure.net/1f48130b-a059-42ac-9595-501b0824188d/85306180-5146-44e7-91e8-2be2529f7528.ism/manifest",
-        type: "application/vnd.ms-sstr+xml",
-        waveform: generateWaveformSample(),
-      },
-      {
-        name: 'Alternative track #3',
-        length: '03:20',
-        id: '3',
-      },
-      {
-        name: 'Alternative track #4',
-        length: '03:20',
-        id: '4',
-      },
-    ],
-  },
-  {
-    name: 'Hitchhiking the Air #2',
-    length: '03:23',
-    id: '5',
-    alternativeTracks: [],
-  },
-  {
-    name: 'Hitchhiking the Air #3',
-    length: '03:23',
-    id: '6',
-    alternativeTracks: [ 
-      {
-        name: 'Alternative track #2',
-        length: '03:20',
-        id: '7',
-      },
-      {
-        name: 'Alternative track #3',
-        length: '03:20',
-        id: '8',
-      },
-      {
-        name: 'Alternative track #4',
-        length: '03:20',
-        id: '9',
-      },
-    ],
-  },
-];
-
 Playlist.propTypes = {
   activeTrack: PropTypes.object,
+  bandInfo: PropTypes.object,
   isPlaying: PropTypes.bool,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
 };
 
 export default function Playlist(props) {
+  const { bandInfo } = props;
+  console.log(bandInfo);
+
+  const getAlbumTrackCounts = () => {
+    const { songGroups } = bandInfo.albums[0];
+    let alternativeTracksCount = 0;
+
+    songGroups.forEach(sg => {
+      alternativeTracksCount += sg.songs.length - 1;
+    });
+
+    return `${songGroups.length} main tracks, ${alternativeTracksCount} alternative versions`;
+  };
+  
   return (
     <div className="col-5 px-0 mt-3 pt-2">
       <div className="playlist-description mb-3 pb-2">
@@ -88,19 +34,19 @@ export default function Playlist(props) {
         </h5>
         <div className="d-flex">
           <div className="light-text pr-1">Band:</div>
-          <div>Modernova</div>
+          <div>{bandInfo.name}</div>
         </div>
         <div className="d-flex">
           <div className="light-text pr-1">Album:</div>
-          <div>Do what you feel</div>
+          <div>{bandInfo.albums[0].name} ({bandInfo.albums[0].year})</div>
         </div>
         <div className="small-text">
-          4 main tracks, 6 alternative versions
+          {getAlbumTrackCounts()}
         </div>
       </div>
 
       <div className="playlist-tracks ml-n5">
-        {trackGroups.map((trackGroup, index) =>
+        {bandInfo.albums[0].songGroups.map((trackGroup, index) =>
           <TrackGroup
             key={index}
             trackGroup={trackGroup}

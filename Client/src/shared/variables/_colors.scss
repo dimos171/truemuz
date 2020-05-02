@@ -10,8 +10,10 @@ $main-dark-theme-active-track-shadow: rgba(22, 22, 22, 0.25);
 $main-dark-theme-collapsed-track-background: #2b2828;
 $main-dark-theme-volume-slider-color: #8437E4;
 $main-dark-theme-waveform-active-bar-color: #5A1EA6;
+$main-dark-theme-waveform-hovered-bar-color: #9962dd;
 
 :export {
   waveformBarDefaultColor: $main-dark-theme-text-color;
-  waveformBarHoveredBarColor: $main-dark-theme-waveform-active-bar-color;
+  waveformBarHoveredBarColor: $main-dark-theme-waveform-hovered-bar-color;
+  waveformBarActiveBarColor: $main-dark-theme-waveform-active-bar-color;
 }

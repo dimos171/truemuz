@@ -55,9 +55,11 @@ export default function AzureMediaPlayer(props) {
 
   useEffect(() => {
     if (props.activeTrack && player) {
+      const link = props.activeTrack.streamLinks.find(sl => sl.type === 'Smooth');
+      
       player.src([{
-        "src": props.activeTrack.url,
-        "type": props.activeTrack.type,
+        "src": link.url,
+        // "type": props.activeTrack.type,
       }]);
     }
   }, [props.activeTrack, player]);

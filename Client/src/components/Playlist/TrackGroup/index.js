@@ -24,12 +24,14 @@ export default function TrackGroup(props) {
     changeIsPlaying,
   } = props;
 
-  const constainsAltervative = trackGroup.alternativeTracks && trackGroup.alternativeTracks.length > 0;
+  const constainsAltervative = trackGroup.songs && trackGroup.songs.length > 1;
 
   const isActiveTrack = (activeTrack, track) => activeTrack != null && activeTrack.id === track.id;
 
+  const masterTrack = trackGroup.songs.find(s => s.isMaster);
+
   const getAlternativeTracksMarkup = () =>
-    trackGroup.alternativeTracks.map((track, index) => 
+    trackGroup.songs.slice(1).map((track, index) => 
       <Track
         key={index}
         track={track}
@@ -43,11 +45,11 @@ export default function TrackGroup(props) {
   return (
     <div className={collapsed ? 'collapsed' : ''}>
       <Track
-        track={trackGroup}
+        track={masterTrack}
         collapsed={collapsed}
         collapsedChange={setCollapsed}
         constainsAltervative={constainsAltervative}
-        isActiveTrack={isActiveTrack(activeTrack, trackGroup)}
+        isActiveTrack={isActiveTrack(activeTrack, masterTrack)}
         isPlaying={isPlaying}
         changeActiveTrack={changeActiveTrack}
         changeIsPlaying={changeIsPlaying}
