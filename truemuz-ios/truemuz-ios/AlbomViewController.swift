@@ -9,40 +9,46 @@
 import UIKit
 
 class AlbomViewController: UIViewController {
+    
 
-    @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var searchTableView: UITableView!
-    
-    var isSearchBarEmpty: Bool {
-      return searchBar.text?.isEmpty ?? true
-    }
-    
-    var dataSource: SearchDataSource?
+    @IBOutlet weak var containerViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var containerView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataSource = SearchDataSource(source: getSearchData())
-        searchTableView.dataSource = dataSource!
-        //searchTableView.isHidden = isSearchBarEmpty
+        adjustContainerTopConstraint()
     }
     
-    func getSearchData() -> [SearchCellViewModel]{
-        var mockSearch = [SearchCellViewModel]()
-        mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
-        mockSearch.append(SearchCellViewModel(artist: "PinlFloyd", album: "Dark Side Of The Moon", year: 1973, logo: "The_Dark_Side_of_the_Moon"))
-        mockSearch.append(SearchCellViewModel(artist: "Radiohead", album: "In Rainbows", year: 2007, logo: "In_Rainbows"))
-        mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
-        mockSearch.append(SearchCellViewModel(artist: "PinlFloyd", album: "Dark Side Of The Moon", year: 1973, logo: "The_Dark_Side_of_the_Moon"))
-        mockSearch.append(SearchCellViewModel(artist: "Radiohead", album: "In Rainbows", year: 2007, logo: "In_Rainbows"))
-        mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
-        mockSearch.append(SearchCellViewModel(artist: "PinlFloyd", album: "Dark Side Of The Moon", year: 1973, logo: "The_Dark_Side_of_the_Moon"))
-        mockSearch.append(SearchCellViewModel(artist: "Radiohead", album: "In Rainbows", year: 2007, logo: "In_Rainbows"))
-        mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
-        mockSearch.append(SearchCellViewModel(artist: "PinlFloyd", album: "Dark Side Of The Moon", year: 1973, logo: "The_Dark_Side_of_the_Moon"))
-        mockSearch.append(SearchCellViewModel(artist: "Radiohead", album: "In Rainbows", year: 2007, logo: "In_Rainbows"))
-        return mockSearch
+    func adjustContainerTopConstraint(){
+        if UIDevice().userInterfaceIdiom == .phone {
+        switch UIScreen.main.nativeBounds.height {
+            case 1136:
+                //"iPhone 5 or 5S or 5C"
+                containerViewTopConstraint.constant = 0
+            case 1334:
+                //"iPhone 6/6S/7/8"
+                containerViewTopConstraint.constant = 0
+            case 1920, 2208:
+                //"iPhone 6+/6S+/7+/8+"
+                containerViewTopConstraint.constant = 0
+            case 2436:
+                //"iPhone X/XS/11 Pro"
+                containerViewTopConstraint.constant = 33
+            case 2688:
+                //"iPhone XS Max/11 Pro Max"
+                containerViewTopConstraint.constant = 33
+            case 1792:
+                //"iPhone XR/ 11"
+                containerViewTopConstraint.constant = 33
+            default:
+                containerViewTopConstraint.constant = 33
+            }
+        }
+        
+        containerView.layoutIfNeeded()
     }
+
 }
 
 

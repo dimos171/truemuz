@@ -15,6 +15,7 @@
 		C30CF154245C397B00DBC0B6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C30CF152245C397B00DBC0B6 /* LaunchScreen.storyboard */; };
 		C30CF15C245C3CCE00DBC0B6 /* AlbomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30CF15B245C3CCE00DBC0B6 /* AlbomViewController.swift */; };
 		C30CF15F245CA39E00DBC0B6 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30CF15E245CA39E00DBC0B6 /* SearchTableViewCell.swift */; };
+		C32DE1B72467DC9600BB1EB9 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32DE1B62467DC9600BB1EB9 /* SearchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		C30CF155245C397B00DBC0B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C30CF15B245C3CCE00DBC0B6 /* AlbomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbomViewController.swift; sourceTree = "<group>"; };
 		C30CF15E245CA39E00DBC0B6 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
+		C32DE1B62467DC9600BB1EB9 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				C30CF155245C397B00DBC0B6 /* Info.plist */,
 				C30CF15B245C3CCE00DBC0B6 /* AlbomViewController.swift */,
 				C30CF15E245CA39E00DBC0B6 /* SearchTableViewCell.swift */,
+				C32DE1B62467DC9600BB1EB9 /* SearchViewController.swift */,
 			);
 			path = "truemuz-ios";
 			sourceTree = "<group>";
@@ -144,6 +147,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C32DE1B72467DC9600BB1EB9 /* SearchViewController.swift in Sources */,
 				C30CF15C245C3CCE00DBC0B6 /* AlbomViewController.swift in Sources */,
 				C30CF14C245C397B00DBC0B6 /* PlayerViewController.swift in Sources */,
 				C30CF148245C397B00DBC0B6 /* AppDelegate.swift in Sources */,

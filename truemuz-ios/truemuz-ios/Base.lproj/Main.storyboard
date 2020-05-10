@@ -23,40 +23,69 @@
                                     <constraint firstAttribute="height" constant="200" id="r1G-es-e2u"/>
                                 </constraints>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qKd-8F-UG9">
-                                <rect key="frame" x="0.0" y="33" width="414" height="663"/>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZvV-rc-z7h">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="696"/>
                                 <connections>
-                                    <segue destination="hN2-KC-tKa" kind="embed" id="7J3-zo-F7W"/>
+                                    <segue destination="xHA-8g-4Zg" kind="embed" id="NLC-Q8-ZK1"/>
                                 </connections>
                             </containerView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="qKd-8F-UG9" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="33" id="6gl-lf-4gU"/>
-                            <constraint firstItem="qKd-8F-UG9" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="FZp-rD-Cgy"/>
-                            <constraint firstAttribute="bottom" secondItem="qKd-8F-UG9" secondAttribute="bottom" constant="200" id="SLa-9t-LrT"/>
-                            <constraint firstItem="qKd-8F-UG9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="imY-HU-4h9"/>
+                            <constraint firstItem="ZvV-rc-z7h" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Gxt-l0-qb3"/>
+                            <constraint firstItem="ZvV-rc-z7h" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Iwh-EC-8a0"/>
+                            <constraint firstItem="ZvV-rc-z7h" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="J9D-0K-fiX"/>
+                            <constraint firstItem="Zze-7K-rFM" firstAttribute="top" secondItem="ZvV-rc-z7h" secondAttribute="bottom" id="kdw-Kz-sX3"/>
                             <constraint firstAttribute="bottom" secondItem="Zze-7K-rFM" secondAttribute="bottom" id="mty-tX-QOl"/>
                             <constraint firstItem="Zze-7K-rFM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="r3H-q3-PLQ"/>
                             <constraint firstItem="Zze-7K-rFM" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="tB0-Xf-7Xw"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <connections>
-                        <outlet property="containerView" destination="qKd-8F-UG9" id="zVk-Al-p88"/>
-                        <outlet property="containerViewTopConstraint" destination="6gl-lf-4gU" id="eBw-Gv-ZsJ"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="115.84821428571428"/>
         </scene>
         <!--Albom View Controller-->
+        <scene sceneID="ARn-eg-gkk">
+            <objects>
+                <viewController id="xHA-8g-4Zg" customClass="AlbomViewController" customModule="truemuz_ios" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="N2R-OY-KA3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="696"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n1m-su-lEU">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="666"/>
+                                <connections>
+                                    <segue destination="hN2-KC-tKa" kind="embed" id="fhD-bJ-kkk"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="n1m-su-lEU" firstAttribute="leading" secondItem="JMg-o9-aE6" secondAttribute="leading" id="1dm-Ha-wiA"/>
+                            <constraint firstItem="JMg-o9-aE6" firstAttribute="bottom" secondItem="n1m-su-lEU" secondAttribute="bottom" constant="30" id="uq7-sx-mH8"/>
+                            <constraint firstItem="n1m-su-lEU" firstAttribute="trailing" secondItem="JMg-o9-aE6" secondAttribute="trailing" id="v4S-ho-hQe"/>
+                            <constraint firstItem="n1m-su-lEU" firstAttribute="top" secondItem="N2R-OY-KA3" secondAttribute="top" id="vgn-Uo-4vz"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="JMg-o9-aE6"/>
+                    </view>
+                    <connections>
+                        <outlet property="containerView" destination="n1m-su-lEU" id="6Dm-Zn-IPf"/>
+                        <outlet property="containerViewTopConstraint" destination="vgn-Uo-4vz" id="dz6-KF-DUh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Mqm-41-wmc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1105.7971014492755" y="44.866071428571423"/>
+        </scene>
+        <!--Search View Controller-->
         <scene sceneID="R79-aR-L3X">
             <objects>
-                <viewController id="hN2-KC-tKa" customClass="AlbomViewController" customModule="truemuz_ios" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="hN2-KC-tKa" customClass="SearchViewController" customModule="truemuz_ios" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XcM-4R-luX">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="663"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="666"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="vji-sW-cT1">
@@ -64,7 +93,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="scrollableAxes" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gNj-CE-tkE">
-                                <rect key="frame" x="0.0" y="56" width="414" height="607"/>
+                                <rect key="frame" x="0.0" y="56" width="414" height="610"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <viewLayoutGuide key="contentLayoutGuide" id="qi7-gO-bTi"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="DCs-Em-RYP"/>
@@ -142,12 +171,13 @@
                         <viewLayoutGuide key="safeArea" id="Tdr-zc-KOz"/>
                     </view>
                     <connections>
-                        <outlet property="searchTableView" destination="gNj-CE-tkE" id="edj-Xd-BUv"/>
+                        <outlet property="searchBar" destination="vji-sW-cT1" id="IB0-tF-mLX"/>
+                        <outlet property="searchTableView" destination="gNj-CE-tkE" id="Pai-u0-9FT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RhW-Q4-u0m" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="892.75362318840587" y="55.915178571428569"/>
+            <point key="canvasLocation" x="2116" y="-21"/>
         </scene>
     </scenes>
 </document>
