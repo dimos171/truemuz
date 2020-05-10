@@ -55,12 +55,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="696"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n1m-su-lEU">
+                            <containerView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n1m-su-lEU">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="666"/>
                                 <connections>
                                     <segue destination="hN2-KC-tKa" kind="embed" id="fhD-bJ-kkk"/>
                                 </connections>
                             </containerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Player" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NqH-qH-Bzj">
+                                <rect key="frame" x="165" y="438" width="83" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="31"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -91,12 +98,18 @@
                             <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="vji-sW-cT1">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="searchField.textColor">
+                                        <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="scrollableAxes" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gNj-CE-tkE">
                                 <rect key="frame" x="0.0" y="56" width="414" height="610"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <viewLayoutGuide key="contentLayoutGuide" id="qi7-gO-bTi"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="DCs-Em-RYP"/>
+                                <color key="sectionIndexColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SearchCell" rowHeight="70" id="5ZC-yn-ACj" customClass="SearchTableViewCell" customModule="truemuz_ios" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="70"/>
@@ -158,15 +171,15 @@
                                 </prototypes>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="gNj-CE-tkE" secondAttribute="trailing" id="Bsm-TU-Nk0"/>
                             <constraint firstItem="vji-sW-cT1" firstAttribute="top" secondItem="XcM-4R-luX" secondAttribute="top" id="IN0-Gw-O4f"/>
                             <constraint firstItem="gNj-CE-tkE" firstAttribute="leading" secondItem="XcM-4R-luX" secondAttribute="leading" id="J18-ha-eNo"/>
                             <constraint firstItem="vji-sW-cT1" firstAttribute="leading" secondItem="XcM-4R-luX" secondAttribute="leading" id="P61-My-PpL"/>
+                            <constraint firstItem="gNj-CE-tkE" firstAttribute="bottom" secondItem="Tdr-zc-KOz" secondAttribute="bottom" id="Ran-F2-TX8"/>
                             <constraint firstItem="gNj-CE-tkE" firstAttribute="top" secondItem="vji-sW-cT1" secondAttribute="bottom" id="bZ7-UZ-pnm"/>
                             <constraint firstAttribute="trailing" secondItem="vji-sW-cT1" secondAttribute="trailing" id="esR-Qn-8zO"/>
-                            <constraint firstAttribute="bottom" secondItem="gNj-CE-tkE" secondAttribute="bottom" id="pUM-qg-ApH"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Tdr-zc-KOz"/>
                     </view>
