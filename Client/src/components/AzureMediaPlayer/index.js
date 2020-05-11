@@ -12,6 +12,7 @@ AzureMediaPlayer.propTypes = {
 };
 
 export default function AzureMediaPlayer(props) {
+
   const playerDomRef = useRef(null);
   const [player, setPlayer] = useState(null);
   const { changeCurrentPlayTime } = props;

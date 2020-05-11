@@ -8,6 +8,7 @@ import AzureMediaPlayer from '../AzureMediaPlayer';
 import { getBandInfoByName } from '../../services/api-service';
 import './index.scss';
 import BandInfo from '../BandInfo';
+import VideoJS from '../VideoJS';
 
 export default function App() {
   const [activeTrack, setActiveTrack] = useState(null);
@@ -56,7 +57,7 @@ export default function App() {
           />
         )}
       </div>
-      <AzureMediaPlayer
+      <VideoJS
         isPlaying={isPlaying}
         activeTrack={activeTrack}
         volume={volume}
