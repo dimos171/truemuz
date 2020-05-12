@@ -24,7 +24,7 @@ namespace TimeTriggers
         [BsonElement("name")]
         public string Name { get; set; }
 
-        [BsonElement("song-groups")]
+        [BsonElement("songGroups")]
         public IEnumerable<SongGroup> SongGroups { get; set; }
     }
 
@@ -41,17 +41,23 @@ namespace TimeTriggers
     [BsonIgnoreExtraElements]
     public class Song
     {
-        [BsonElement("display-name")]
+        [BsonElement("displayName")]
         public string DisplayName { get; set; }
 
-        [BsonElement("blob-name")]
+        [BsonElement("blobName")]
         public string BlobName { get; set; }
 
         [BsonElement("format")]
         public string Format { get; set; }
 
-        [BsonElement("stream-links")]
+        [BsonElement("streamLinks")]
         public IEnumerable<StreamLink> StreamLinks { get; set; }
+
+        [BsonElement("waveForm")]
+        public IEnumerable<double> WaveForm { get; set; }
+
+        [BsonElement("duration")]
+        public double Duration { get; set; }
     }
 
     [BsonIgnoreExtraElements]
