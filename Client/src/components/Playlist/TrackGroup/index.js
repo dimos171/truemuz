@@ -31,7 +31,7 @@ export default function TrackGroup(props) {
   const masterTrack = trackGroup.songs.find(s => s.isMaster);
 
   const getAlternativeTracksMarkup = () =>
-    trackGroup.songs.slice(1).map((track, index) => 
+    trackGroup.songs.filter(s => !s.isMaster).map((track, index) => 
       <Track
         key={index}
         track={track}

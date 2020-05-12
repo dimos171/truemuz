@@ -13,7 +13,6 @@ Playlist.propTypes = {
 
 export default function Playlist(props) {
   const { bandInfo } = props;
-  console.log(bandInfo);
 
   const getAlbumTrackCounts = () => {
     const { songGroups } = bandInfo.albums[0];

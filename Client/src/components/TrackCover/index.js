@@ -1,6 +1,5 @@
 import React from 'react';
 
-import cover from '../../../public/images/retro_background.jpg';
 import avatar from '../../../public/images/img_avatar.png';
 import './index.scss';
 
@@ -15,7 +14,7 @@ export default function TrackCover() {
       </div>
 
       <div className="cover-container">
-        <img className="cover-container-image p-2" src={cover} />
+        <img className="cover-container-image p-2" src='https://truemuz.blob.core.windows.net/songs/Modernova/DoWhatYouFeel/Logo.jpg' />
         <div className="cover-container-border"></div>
       </div>
     </div>

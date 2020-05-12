@@ -63,21 +63,19 @@ export default function VideoJS(props) {
             src: link.url,
             type: "application/x-mpegURL",
           });
-          //player.muted(true); //Safari policy fix
         }
       }, [props.activeTrack, player]);
     
       useEffect(() => {
+        
         if (player) {
           if (props.isPlaying) {
             var playPromise = player.play();
             if (playPromise !== undefined) {
-              playPromise.then(_ => {
-                //player.muted(false);
+              playPromise.then(_ => {       
               })
               .catch(error => {
-                // Auto-play was prevented
-                // Show paused UI.
+                console.error(error.message);
               });
             }
   
