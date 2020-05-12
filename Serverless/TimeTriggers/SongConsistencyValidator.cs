@@ -13,6 +13,7 @@ using Microsoft.Azure.Management.Media.Models;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Rest;
 using Microsoft.Rest.Azure.Authentication;
+using NAudio.Wave;
 
 namespace TimeTriggers
 {
@@ -57,7 +58,7 @@ namespace TimeTriggers
                     artists.Add(artist);
                 }
 
-                var linksToAdd = await Validate(artists);
+                var linksToAdd = await ValidateStreamLinks(artists);
 
                 foreach (var link in linksToAdd)
                 {
@@ -66,15 +67,27 @@ namespace TimeTriggers
                     var bsonArray = new BsonArray();
                     bsonArray.AddRange(link.links.Select(l => new BsonDocument { { "type", l.Type.ToString() }, { "url", l.Url } }));
 
-                    var albumIndex = artists.Where(ar => ar.Name == link.artistName).FirstOrDefault().Albums.ToList().FindIndex(al => al.Name == link.albumName);
-                    var songGroupIndex = artists.Where(ar => ar.Name == link.artistName).FirstOrDefault().Albums.Where(al => al.Name == link.albumName).FirstOrDefault().SongGroups.ToList().FindIndex(sg => sg.Name == link.songGroupName);
-                    var songIndex = artists.Where(ar => ar.Name == link.artistName).FirstOrDefault().Albums.Where(al => al.Name == link.albumName).FirstOrDefault().SongGroups.Where(sg => sg.Name == link.songGroupName).FirstOrDefault().Songs.ToList().FindIndex(s => s.BlobName == link.blobName);
+                    var indexes = GetIndexes(artists, link.artistName, link.albumName, link.songGroupName, link.blobName);
 
-
-                    var update = Builders<BsonDocument>.Update.Set($"albums.{albumIndex}.song-groups.{songGroupIndex}.songs.{songIndex}.stream-links", bsonArray);
+                    var update =  Builders<BsonDocument>.Update.Set($"albums.{indexes.albumIndex}.songGroups.{indexes.songGroupIndex}.songs.{indexes.songIndex}.streamLinks", bsonArray);
 
                     collection.UpdateOne(filter, update);
                 }
+
+                var waveFormsToAdd = ValidateWaveForms(artists);
+                foreach (var waveForm in waveFormsToAdd)
+                {
+                    var filter = Builders<BsonDocument>.Filter.Eq("name", waveForm.artistName);
+
+                    var indexes = GetIndexes(artists, waveForm.artistName, waveForm.albumName, waveForm.songGroupName, waveForm.blobName);
+
+                    var update = Builders<BsonDocument>.Update.Set($"albums.{indexes.albumIndex}.songGroups.{indexes.songGroupIndex}.songs.{indexes.songIndex}.duration", waveForm.duration);
+                    collection.UpdateOne(filter, update);
+
+                    update = Builders<BsonDocument>.Update.Set($"albums.{indexes.albumIndex}.songGroups.{indexes.songGroupIndex}.songs.{indexes.songIndex}.waveForm", waveForm.peaks);
+                    collection.UpdateOne(filter, update);
+                }
+
             }
             catch (Exception e)
             {
@@ -83,12 +96,21 @@ namespace TimeTriggers
             }
         }
 
-        private static async Task<IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, IEnumerable<Link> links)>> Validate(List<Artist> artists)
+        private static (int albumIndex, int songGroupIndex, int songIndex) GetIndexes(List<Artist> artists, string artistName, string albumName, string songGroupName, string blobName)
+        {
+            var albumIndex = artists.Where(ar => ar.Name == artistName).FirstOrDefault().Albums.ToList().FindIndex(al => al.Name == albumName);
+            var songGroupIndex = artists.Where(ar => ar.Name == artistName).FirstOrDefault().Albums.Where(al => al.Name == albumName).FirstOrDefault().SongGroups.ToList().FindIndex(sg => sg.Name == songGroupName);
+            var songIndex = artists.Where(ar => ar.Name == artistName).FirstOrDefault().Albums.Where(al => al.Name == albumName).FirstOrDefault().SongGroups.Where(sg => sg.Name == songGroupName).FirstOrDefault().Songs.ToList().FindIndex(s => s.BlobName == blobName);
+
+            return (albumIndex, songGroupIndex, songIndex);
+        }
+
+        private static async Task<IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, IEnumerable<Link> links)>> ValidateStreamLinks(List<Artist> artists)
         {
             IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, string format)> songsWithoutLinks = artists.SelectMany(ar => ar.Albums
                 .SelectMany(al => al.SongGroups
                 .SelectMany(sg => sg.Songs.Where(s => s.StreamLinks.Count() == 0)
-                .Select(s => (ar.Name, al.Name, sg.Name, s.BlobName, s.Format)))));
+                ?.Select(s => (ar.Name, al.Name, sg.Name, s.BlobName, s.Format)))));
 
             var validationOutput = new List<(string artistName, string albumName, string songGroupName, string blobName, IEnumerable<Link> links)>();
             foreach(var song in songsWithoutLinks)
@@ -337,6 +359,62 @@ namespace TimeTriggers
             {
                 await client.Jobs.DeleteAsync(resourceGroupName, accountName, transformName, job.Name);
             }
+        }
+
+        private static IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, float[] peaks, double duration)> ValidateWaveForms(List<Artist> artists)
+        {
+            IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, string format)> songsWithoutWaveForms = artists.SelectMany(ar => ar.Albums
+                .SelectMany(al => al.SongGroups
+                .SelectMany(sg => sg.Songs.Where(s => s.WaveForm?.Count() != 1000 || s.WaveForm == null)
+                ?.Select(s => (ar.Name, al.Name, sg.Name, s.BlobName, s.Format)))));
+
+            var validationOutput = new List<(string artistName, string albumName, string songGroupName, string blobName, float[] peaks, double duration)>();
+
+            foreach (var song in songsWithoutWaveForms)
+            {
+                var waveForm = GetWaveFormArray(song.artistName, song.albumName, song.songGroupName, song.blobName, song.format);
+                validationOutput.Add((song.artistName, song.albumName, song.songGroupName, song.blobName, waveForm.array, waveForm.duration));
+            }
+
+            return validationOutput;
+        }
+
+        private static (float[] array, double duration) GetWaveFormArray(string artistName, string albumName, string songGroupName, string songBlobName, string format)
+        {
+            var url = string.Join('/', new List<string> { _blobStorage, artistName, albumName, songGroupName, songBlobName + format });
+
+            var peakProvider = new PeakProvider();
+
+            using (var reader = new MediaFoundationReader(url))
+            {
+                int bytesPerSample = (reader.WaveFormat.BitsPerSample / 8);
+                var samples = reader.Length / (bytesPerSample);
+                var samplesPerPixel = (int)(samples / 1000);
+                peakProvider.Init(reader, samplesPerPixel, 1000);
+
+                var duration = reader.TotalTime.TotalSeconds;
+                var peaks = GetPeaks(peakProvider);
+
+                return (peaks, duration);
+            }
+        }
+
+        private static float[] GetPeaks(PeakProvider peakProvider)
+        {
+            float[] array = new float[1000];
+            int x = 0;
+            var currentPeak = peakProvider.GetNextPeak();
+            while (x < 1000)
+            {
+                var nextPeak = peakProvider.GetNextPeak();
+
+                array[x] = currentPeak;
+                x++;
+
+                currentPeak = nextPeak;
+            }
+
+            return array;
         }
     }
 }
