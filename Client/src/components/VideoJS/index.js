@@ -10,6 +10,7 @@ VideoJS.propTypes = {
   forcedCurrentPlayTime: PropTypes.number,
   isPlaying: PropTypes.bool,
   changeCurrentPlayTime: PropTypes.func,
+  setOuterControl: PropTypes.func
 };
 
 export default function VideoJS(props) {
@@ -25,14 +26,18 @@ export default function VideoJS(props) {
       
           const settings = {
             controls: false,
-            autoplay: true,
+            autoplay: false,
             nativeControlsForTouch: false,
             width: '0',
             height: '0',
             poster: '',
           };
-      
+          
           setPlayer(window.videojs(playerDomRef.current, settings));
+          props.setOuterControl({
+            play: () => {player.play()},
+            pause: () => {player.pause()}
+          });
         };
     
         const handleTimeChange = () => {
@@ -65,26 +70,7 @@ export default function VideoJS(props) {
           });
         }
       }, [props.activeTrack, player]);
-    
-      useEffect(() => {
-        
-        if (player) {
-          if (props.isPlaying) {
-            var playPromise = player.play();
-            if (playPromise !== undefined) {
-              playPromise.then(_ => {       
-              })
-              .catch(error => {
-                console.error(error.message);
-              });
-            }
-  
-          } else {
-            player.pause();
-          }
-        }
-      }, [props.isPlaying, player]);
-    
+      
       useEffect(() => {
         if (player) {
           player.volume(props.volume);

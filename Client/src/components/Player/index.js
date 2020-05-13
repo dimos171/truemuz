@@ -19,13 +19,24 @@ Player.propTypes = {
   changeIsPlaying: PropTypes.func,
   changeVolume: PropTypes.func,
   setForcedCurrentPlayTime: PropTypes.func,
+  playerControl: PropTypes.object
 };
 
 export default function Player(props) {
   const waveformContainerRef = useRef(null);
   const [waveformContainerDimensions, setWaveformContainerDimensions] = useState({ width: 0, height: 0 });
 
-  const handlePlayClick = () => props.changeIsPlaying(!props.isPlaying);
+  const handlePlayClick = () => {
+    props.changeIsPlaying(!props.isPlaying);
+    // Safari can start play only in user action event context
+    // Also the same fix applied in Track component
+    if (!props.isPlaying) {
+      props.playerControl.play();
+    }
+    else {
+      props.playerControl.pause();
+    }
+  }
 
   const getVolumeForSlider = () => props.volume * 100;
 

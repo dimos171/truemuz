@@ -11,6 +11,7 @@ BandInfo.propTypes = {
   isPlaying: PropTypes.bool,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
+  playerControl: PropTypes.object
 };
 
 export default function BandInfo(props) {
@@ -22,6 +23,7 @@ export default function BandInfo(props) {
         changeActiveTrack={props.changeActiveTrack}
         changeIsPlaying={props.changeIsPlaying}
         bandInfo={props.bandInfo}
+        playerControl = {props.playerControl}
       />
       <TrackCover />
       <TrackDescription />

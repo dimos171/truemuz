@@ -18,6 +18,7 @@ Track.propTypes = {
   collapsedChange: PropTypes.func,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
+  playerControl: PropTypes.object
 };
 
 export default function Track(props) {
@@ -28,16 +29,25 @@ export default function Track(props) {
   const handlePlayIconClick = () => {
     if (!props.isActiveTrack) {
       props.changeActiveTrack(props.track);
-
+      
       if (!props.isPlaying) {
-        props.changeIsPlaying(!props.isPlaying);
-      }
+        props.changeIsPlaying(!props.isPlaying);    
+      }  
+      
+      setTimeout(() => {
+          props.playerControl.play();  
+        }, 300);
+        
     } else {
       props.changeIsPlaying(!props.isPlaying);
+      props.playerControl.play();
     }
   };
 
-  const handlePauseIconClick = () => props.changeIsPlaying(!props.isPlaying);
+  const handlePauseIconClick = () => {
+    props.changeIsPlaying(!props.isPlaying);
+    props.playerControl.pause();
+  };
 
   const getPausePlayIcon = () => props.isActiveTrack && props.isPlaying
     ? <GiPauseButton className="mr-3 icon" onClick={handlePauseIconClick} />

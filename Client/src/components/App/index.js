@@ -17,6 +17,7 @@ export default function App() {
   const [volume, setVolume] = useState(1);
   const [currentPlayTime, setCurrentPlayTime] = useState(0);
   const [forcedCurrentPlayTime, setForcedCurrentPlayTime] = useState(0);
+  const [playerControl, setPlayerControl] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -40,6 +41,7 @@ export default function App() {
             changeIsPlaying={setIsPlaying}
             changeVolume={setVolume}
             setForcedCurrentPlayTime={setForcedCurrentPlayTime}
+            playerControl = {playerControl}
           />
         )}
       </div>
@@ -49,6 +51,7 @@ export default function App() {
         volume={volume}
         forcedCurrentPlayTime={forcedCurrentPlayTime}
         changeCurrentPlayTime={setCurrentPlayTime}
+        setOuterControl={setPlayerControl}
       />
 
       <div className={`partial-view-container d-flex ${activeTrack ? 'visible-header' : ''}`}>
@@ -61,6 +64,7 @@ export default function App() {
                 changeActiveTrack={setActiveTrack}
                 changeIsPlaying={setIsPlaying}
                 isPlaying={isPlaying}
+                playerControl = {playerControl}
               />
             ) : (
               <div>

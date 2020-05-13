@@ -10,7 +10,8 @@ TrackGroup.propTypes = {
   activeTrack: PropTypes.object,
   isPlaying: PropTypes.bool,
   changeActiveTrack: PropTypes.func,
-  changeIsPlaying: PropTypes.func, 
+  changeIsPlaying: PropTypes.func,
+  playerControl: PropTypes.object 
 };
 
 export default function TrackGroup(props) {
@@ -39,6 +40,7 @@ export default function TrackGroup(props) {
         isPlaying={isPlaying}
         changeActiveTrack={changeActiveTrack}
         changeIsPlaying={changeIsPlaying}
+        playerControl = {props.playerControl}
       />
     );
 
@@ -54,6 +56,7 @@ export default function TrackGroup(props) {
         changeActiveTrack={changeActiveTrack}
         changeIsPlaying={changeIsPlaying}
         mainVersion
+        playerControl = {props.playerControl}
       />
 
       {constainsAltervative && (

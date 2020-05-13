@@ -9,6 +9,7 @@ Playlist.propTypes = {
   isPlaying: PropTypes.bool,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
+  playerControl: PropTypes.object
 };
 
 export default function Playlist(props) {
@@ -53,6 +54,7 @@ export default function Playlist(props) {
             isPlaying={props.isPlaying}
             changeActiveTrack={props.changeActiveTrack}
             changeIsPlaying={props.changeIsPlaying}
+            playerControl = {props.playerControl}
           />
         )}
       </div>
