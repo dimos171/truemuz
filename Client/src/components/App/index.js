@@ -5,10 +5,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Header from '../Header';
 import Player from '../Player';
 import AzureMediaPlayer from '../AzureMediaPlayer';
+import VideoJS from '../VideoJS';
 import { getBandInfoByName } from '../../services/api-service';
 import './index.scss';
 import BandInfo from '../BandInfo';
-import VideoJS from '../VideoJS';
 
 export default function App() {
   const [activeTrack, setActiveTrack] = useState(null);
@@ -21,25 +21,11 @@ export default function App() {
   useEffect(() => {
     const loadData = async () => {
       const data = await getBandInfoByName('Modernova');
-      data.albums[0].songGroups.forEach(sg => {
-        sg.songs.forEach(s => s.waveform = generateWaveformSample());
-      });
-      
       setBandInfo(data);
     };
 
     loadData();
   }, []);
-
-  const generateWaveformSample = () => {
-    const array = [];
-  
-    for (let i = 0; i < 1000; i++) {
-      array[i] = Math.random();
-    }
-  
-    return array;
-  };
 
   return (
     <div className="root-container mx-5">

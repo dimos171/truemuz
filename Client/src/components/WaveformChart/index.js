@@ -120,7 +120,8 @@ export default function WaveformChart(props) {
     const barsCount = Math.floor(props.width / BARS_OFFSET);
     const alreadyPlayedBarsCount = Math.floor((props.currentPlayTime / props.activeTrack.duration) * barsCount);
     let x = BAR_WIDTH;
-    waveformData.current = getAverageSampleForWaveform(props.activeTrack.waveform, barsCount);
+
+    waveformData.current = getAverageSampleForWaveform(props.activeTrack.waveForm, barsCount);
 
     for (let index = 0; index < alreadyPlayedBarsCount; index++, x += BARS_OFFSET) {
       drawLine(canvasCtx, x, props.height, waveformData.current[index]);
