@@ -18,7 +18,7 @@ Track.propTypes = {
   collapsedChange: PropTypes.func,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
-  playerControl: PropTypes.object
+  playerControl: PropTypes.object,
 };
 
 export default function Track(props) {

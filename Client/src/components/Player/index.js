@@ -19,7 +19,7 @@ Player.propTypes = {
   changeIsPlaying: PropTypes.func,
   changeVolume: PropTypes.func,
   setForcedCurrentPlayTime: PropTypes.func,
-  playerControl: PropTypes.object
+  playerControl: PropTypes.object,
 };
 
 export default function Player(props) {
@@ -36,7 +36,7 @@ export default function Player(props) {
     else {
       props.playerControl.pause();
     }
-  }
+  };
 
   const getVolumeForSlider = () => props.volume * 100;
 

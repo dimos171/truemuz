@@ -11,7 +11,7 @@ TrackGroup.propTypes = {
   isPlaying: PropTypes.bool,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
-  playerControl: PropTypes.object 
+  playerControl: PropTypes.object,
 };
 
 export default function TrackGroup(props) {

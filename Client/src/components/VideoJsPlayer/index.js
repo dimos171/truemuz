@@ -1,25 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import loadLibrary from './load-amp-library';
+import loadVideoJsLibrary from './load-videojs-lib';
+import loadVideoJsHlsLibrary from './load-videojs-hls-lib';
+import { streamLinkType } from '../../shared/enums/streamLinkType';
 
-AzureMediaPlayer.propTypes = {
+VideoJsPlayer.propTypes = {
   activeTrack: PropTypes.object,
   volume: PropTypes.number,
   forcedCurrentPlayTime: PropTypes.number,
   isPlaying: PropTypes.bool,
   changeCurrentPlayTime: PropTypes.func,
+  setOuterControl: PropTypes.func,
 };
 
-export default function AzureMediaPlayer(props) {
-
+export default function VideoJsPlayer(props) {
   const playerDomRef = useRef(null);
   const [player, setPlayer] = useState(null);
-  const { changeCurrentPlayTime } = props;
+  const { changeCurrentPlayTime, setOuterControl } = props;
 
   useEffect(() => {
-    const loadAmpLibrary = async () => {
-      await loadLibrary();
+    const loadLibrary = async () => {
+      await Promise.all([loadVideoJsLibrary(), loadVideoJsHlsLibrary()]);
   
       const settings = {
         controls: false,
@@ -29,64 +31,57 @@ export default function AzureMediaPlayer(props) {
         height: '0',
         poster: '',
       };
-  
-      setPlayer(window.amp(playerDomRef.current, settings));
-    };
+      
+      setPlayer(window.videojs(playerDomRef.current, settings));
 
+      setOuterControl({
+        play: () => { player.play() },
+        pause: () => { player.pause() },
+      });
+    };
+  
     const handleTimeChange = () => {
-      // changeCurrentPlayTime(Math.floor(player.currentTime()));
       changeCurrentPlayTime(player.currentTime());
     };
-
+  
     const disposeResourses = () => {
       if (player) {
-        player.removeEventListener('timeupdate', handleTimeChange);
+        player.off('timeupdate', handleTimeChange);
         player.dispose();
       }
     };
 
-    loadAmpLibrary();
+    loadLibrary();
 
     if (player) {
-      player.addEventListener('timeupdate', handleTimeChange);
+      player.on('timeupdate', handleTimeChange);
     }
 
     return disposeResourses;
-  }, [player, changeCurrentPlayTime]);
+  }, [player, changeCurrentPlayTime, setOuterControl]);
 
   useEffect(() => {
     if (props.activeTrack && player) {
-      const link = props.activeTrack.streamLinks.find(sl => sl.type === 'Smooth');
-      
-      player.src([{
-        "src": link.url,
-        // "type": props.activeTrack.type,
-      }]);
+      const link = props.activeTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
+      player.src({
+        src: link.url,
+        type: "application/x-mpegURL",
+      });
     }
   }, [props.activeTrack, player]);
-
-  useEffect(() => {
-    if (player) {
-      if (props.isPlaying) {
-        player.play();
-      } else {
-        player.pause();
-      }
-    }
-  }, [props.isPlaying, player]);
-
+    
   useEffect(() => {
     if (player) {
       player.volume(props.volume);
     }
   }, [props.volume, player]);
-
+  
   useEffect(() => {
     if (player && props.forcedCurrentPlayTime >= 0) {
       player.currentTime(props.forcedCurrentPlayTime);
     }
   }, [props.forcedCurrentPlayTime, player]);
-  
+
   return (
     <video
       id="amp-player"

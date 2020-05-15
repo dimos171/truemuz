@@ -4,11 +4,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Header from '../Header';
 import Player from '../Player';
-import AzureMediaPlayer from '../AzureMediaPlayer';
-import VideoJS from '../VideoJS';
+import VideoJsPlayer from '../VideoJsPlayer';
+import BandInfo from '../BandInfo';
 import { getBandInfoByName } from '../../services/api-service';
 import './index.scss';
-import BandInfo from '../BandInfo';
 
 export default function App() {
   const [activeTrack, setActiveTrack] = useState(null);
@@ -41,11 +40,11 @@ export default function App() {
             changeIsPlaying={setIsPlaying}
             changeVolume={setVolume}
             setForcedCurrentPlayTime={setForcedCurrentPlayTime}
-            playerControl = {playerControl}
+            playerControl={playerControl}
           />
         )}
       </div>
-      <VideoJS
+      <VideoJsPlayer
         isPlaying={isPlaying}
         activeTrack={activeTrack}
         volume={volume}
