@@ -13,24 +13,30 @@ class SearchViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var searchTableView: UITableView!
     
+    let cellHeight : CGFloat = 70
+    var tableFrameHeight: CGFloat = 0
     var searchActive : Bool = false
-    var filtered:[SearchCellViewModel] = []
+    var filtered: [SearchCellViewModel] = []
     var data: [SearchCellViewModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.data = getSearchData()
-
+        
+        self.tableFrameHeight = self.searchTableView.frame.size.height
         self.searchTableView.dataSource = self
         self.searchTableView.delegate = self
         self.searchBar.delegate = self
         self.searchTableView.isHidden = true
-        self.searchBar.endEditing(true)
+        self.searchBar.showsCancelButton = true
+        view.isOpaque = false
     }
     
     override func viewDidLayoutSubviews(){
-        let tableHeight = min(self.searchTableView.contentSize.height, self.searchTableView.frame.size.height)
+        
+        let tableHeight = min(cellHeight * CGFloat(self.filtered.count) + 1, self.tableFrameHeight)
+        
         self.searchTableView.frame = CGRect(x: self.searchTableView.frame.origin.x,
                                              y: self.searchTableView.frame.origin.y,
                                              width: self.searchTableView.frame.size.width,
@@ -46,32 +52,23 @@ class SearchViewController: UIViewController, UITableViewDataSource, UITableView
         self.searchActive = true;
     }
 
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.searchActive = false;
-        self.searchTableView.isHidden = true
-    }
-
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.searchActive = false;
-    }
-
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.searchActive = false;
+        self.searchTableView.isHidden = true
+        self.searchBar.text = nil
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filtered = data.filter({ (cell) -> Bool in
-            let tmp: NSString = cell.album as NSString
-            let range = tmp.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
-            return range.location != NSNotFound
-        })
+        self.filtered = data.filter{ $0.artist.contains(searchText) || $0.album.contains(searchText) }
         if(filtered.count == 0){
             self.searchActive = false;
+            self.searchTableView.isHidden = true
         } else {
-            self.searchTableView.isHidden = false
             self.searchActive = true;
+            self.searchTableView.isHidden = false
+
         }
-        self.searchTableView.reloadData()
+        viewDidLayoutSubviews()
     }
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -90,20 +87,40 @@ class SearchViewController: UIViewController, UITableViewDataSource, UITableView
             return SearchTableViewCell()
         }
         
-        let row = self.data[indexPath.row]
+        let row: SearchCellViewModel
+        if(self.searchActive) {
+            row = self.filtered[indexPath.row]
+        }
+        else {
+            row = self.data[indexPath.row]
+        }
         
         cell.albumLabel.text = row.album
         cell.artistLabel.text = row.artist
         cell.yearLabel.text = String(row.year)
         cell.logoView?.image = UIImage(named: row.logo)
+        //cell.preservesSuperviewLayoutMargins = false
+        cell.separatorInset = UIEdgeInsets.zero
+       // cell.layoutMargins = UIEdgeInsets.zero
         return cell
     }
  
     func getSearchData() -> [SearchCellViewModel]{
         var mockSearch = [SearchCellViewModel]()
         mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
-        mockSearch.append(SearchCellViewModel(artist: "PinlFloyd", album: "Dark Side Of The Moon", year: 1973, logo: "The_Dark_Side_of_the_Moon"))
+        mockSearch.append(SearchCellViewModel(artist: "PinkFloyd", album: "Dark Side Of The Moon", year: 1973, logo: "The_Dark_Side_of_the_Moon"))
         mockSearch.append(SearchCellViewModel(artist: "Radiohead", album: "In Rainbows", year: 2007, logo: "In_Rainbows"))
+        mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
+        mockSearch.append(SearchCellViewModel(artist: "PinkFloyd", album: "Dark Side Of The Moon", year: 1973, logo: "The_Dark_Side_of_the_Moon"))
+        mockSearch.append(SearchCellViewModel(artist: "Radiohead", album: "In Rainbows", year: 2007, logo: "In_Rainbows"))
+        mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
+        mockSearch.append(SearchCellViewModel(artist: "PinkFloyd", album: "Dark Side Of The Moon", year: 1973, logo: "The_Dark_Side_of_the_Moon"))
+        mockSearch.append(SearchCellViewModel(artist: "Radiohead", album: "In Rainbows", year: 2007, logo: "In_Rainbows"))
+        mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
+        mockSearch.append(SearchCellViewModel(artist: "PinkFloyd", album: "Dark Side Of The Moon", year: 1973, logo: "The_Dark_Side_of_the_Moon"))
+        mockSearch.append(SearchCellViewModel(artist: "Radiohead", album: "In Rainbows", year: 2007, logo: "In_Rainbows"))
+        mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
+        mockSearch.append(SearchCellViewModel(artist: "Modernova", album: "Do What You Feel", year: 2018, logo: "Logo-Modernova"))
 
         return mockSearch
     }

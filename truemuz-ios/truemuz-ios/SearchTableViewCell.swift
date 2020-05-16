@@ -26,32 +26,6 @@ class SearchTableViewCell: UITableViewCell {
     }
 }
 
-class SearchDataSource: NSObject, UITableViewDataSource {
-    var dataSource: [SearchCellViewModel]
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell") as? SearchTableViewCell else{
-            return SearchTableViewCell()
-        }
-        
-        let row = self.dataSource[indexPath.row]
-        
-        cell.albumLabel.text = row.album
-        cell.artistLabel.text = row.artist
-        cell.yearLabel.text = String(row.year)
-        cell.logoView?.image = UIImage(named: row.logo)
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dataSource.count
-    }
-    
-    init(source: [SearchCellViewModel]){
-        self.dataSource = source
-    }
-}
-
 class SearchCellViewModel {
     let artist: String
     let album: String
