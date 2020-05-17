@@ -7,9 +7,6 @@ import { streamLinkType } from '../../shared/enums/streamLinkType';
 
 VideoJsPlayer.propTypes = {
   activeTrack: PropTypes.object,
-  volume: PropTypes.number,
-  forcedCurrentPlayTime: PropTypes.number,
-  isPlaying: PropTypes.bool,
   changeCurrentPlayTime: PropTypes.func,
   setOuterControl: PropTypes.func,
 };
@@ -37,6 +34,8 @@ export default function VideoJsPlayer(props) {
       setOuterControl({
         play: () => { player.play() },
         pause: () => { player.pause() },
+        setVolume: (value) => { player.volume(value) },
+        setCurrentTime: (value) => { player.currentTime(value) }
       });
     };
   
@@ -64,23 +63,12 @@ export default function VideoJsPlayer(props) {
     if (props.activeTrack && player) {
       const link = props.activeTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
       player.src({
-        src: link.url,
+        src: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
+        //link.url,
         type: "application/x-mpegURL",
       });
     }
   }, [props.activeTrack, player]);
-    
-  useEffect(() => {
-    if (player) {
-      player.volume(props.volume);
-    }
-  }, [props.volume, player]);
-  
-  useEffect(() => {
-    if (player && props.forcedCurrentPlayTime >= 0) {
-      player.currentTime(props.forcedCurrentPlayTime);
-    }
-  }, [props.forcedCurrentPlayTime, player]);
 
   return (
     <video

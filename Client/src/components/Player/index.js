@@ -14,17 +14,15 @@ import './index.scss';
 Player.propTypes = {
   isPlaying: PropTypes.bool,
   activeTrack: PropTypes.object,
-  volume: PropTypes.number,
   currentPlayTime: PropTypes.number,
   changeIsPlaying: PropTypes.func,
-  changeVolume: PropTypes.func,
-  setForcedCurrentPlayTime: PropTypes.func,
   playerControl: PropTypes.object,
 };
 
 export default function Player(props) {
   const waveformContainerRef = useRef(null);
   const [waveformContainerDimensions, setWaveformContainerDimensions] = useState({ width: 0, height: 0 });
+  const [volume, setVolume] = useState(1);
 
   const handlePlayClick = () => {
     props.changeIsPlaying(!props.isPlaying);
@@ -37,10 +35,15 @@ export default function Player(props) {
       props.playerControl.pause();
     }
   };
+  
+  const getVolumeForSlider = () => { 
+    props.playerControl.setVolume(volume);
+    return volume * 100;
+  }
 
-  const getVolumeForSlider = () => props.volume * 100;
-
-  const handleChangeVolume = (event, changedVolume) => props.changeVolume(changedVolume / 100);
+  const handleChangeVolume = (event, changedVolume) => {
+    setVolume(changedVolume / 100)
+  }
 
   const getPausePlayIcon = () => props.isPlaying
     ? <GiPauseButton className="icon mx-3" size="1.3em" onClick={handlePlayClick} />
@@ -68,7 +71,7 @@ export default function Player(props) {
               height={waveformContainerDimensions.height}
               activeTrack={props.activeTrack}
               currentPlayTime={props.currentPlayTime}
-              setForcedCurrentPlayTime={props.setForcedCurrentPlayTime}
+              setForcedCurrentPlayTime={props.playerControl.setCurrentTime}
             />
           )}
         </div>

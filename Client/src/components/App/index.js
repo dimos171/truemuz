@@ -13,9 +13,7 @@ export default function App() {
   const [activeTrack, setActiveTrack] = useState(null);
   const [bandInfo, setBandInfo] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(1);
   const [currentPlayTime, setCurrentPlayTime] = useState(0);
-  const [forcedCurrentPlayTime, setForcedCurrentPlayTime] = useState(0);
   const [playerControl, setPlayerControl] = useState(null);
 
   useEffect(() => {
@@ -33,22 +31,16 @@ export default function App() {
       <div>
         {activeTrack && (
           <Player
-            isPlaying={isPlaying}
             activeTrack={activeTrack}
-            volume={volume}
+            isPlaying={isPlaying}
+            changeIsPlaying={setIsPlaying}          
             currentPlayTime={currentPlayTime}
-            changeIsPlaying={setIsPlaying}
-            changeVolume={setVolume}
-            setForcedCurrentPlayTime={setForcedCurrentPlayTime}
             playerControl={playerControl}
           />
         )}
       </div>
       <VideoJsPlayer
-        isPlaying={isPlaying}
         activeTrack={activeTrack}
-        volume={volume}
-        forcedCurrentPlayTime={forcedCurrentPlayTime}
         changeCurrentPlayTime={setCurrentPlayTime}
         setOuterControl={setPlayerControl}
       />
@@ -59,11 +51,11 @@ export default function App() {
             {bandInfo ? (
               <BandInfo
                 activeTrack={activeTrack}
-                bandInfo={bandInfo}
                 changeActiveTrack={setActiveTrack}
-                changeIsPlaying={setIsPlaying}
-                isPlaying={isPlaying}
+                isPlaying={isPlaying}        
+                changeIsPlaying={setIsPlaying}       
                 playerControl = {playerControl}
+                bandInfo={bandInfo}
               />
             ) : (
               <div>
