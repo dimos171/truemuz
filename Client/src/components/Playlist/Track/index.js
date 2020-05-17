@@ -18,6 +18,7 @@ Track.propTypes = {
   collapsedChange: PropTypes.func,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
+  changeWikiTrack: PropTypes.func,
   playerControl: PropTypes.object,
 };
 
@@ -29,6 +30,7 @@ export default function Track(props) {
   const handlePlayIconClick = () => {
     if (!props.isActiveTrack) {
       props.changeActiveTrack(props.track);
+      props.changeWikiTrack(props.track);
       
       if (!props.isPlaying) {
         props.changeIsPlaying(!props.isPlaying);    
@@ -36,7 +38,7 @@ export default function Track(props) {
       
       setTimeout(() => {
           props.playerControl.play();  
-        }, 300);
+      }, 300);
         
     } else {
       props.changeIsPlaying(!props.isPlaying);
@@ -49,9 +51,13 @@ export default function Track(props) {
     props.playerControl.pause();
   };
 
+  const handleWikiIconClick = () => {
+    props.changeWikiTrack(props.track);
+  };
+
   const getPausePlayIcon = () => props.isActiveTrack && props.isPlaying
-    ? <GiPauseButton className="mr-3 icon" onClick={handlePauseIconClick} />
-    : <IoIosPlay className="mr-3 icon" onClick={handlePlayIconClick} />;
+    ? <GiPauseButton className="mr-2 icon" onClick={handlePauseIconClick} />
+    : <IoIosPlay className="mr-2 icon" onClick={handlePlayIconClick} />;
 
   const getSortIcon = () => props.collapsed
     ? <FaSortAmountUp className="mr-5 icon" onClick={handlecollapsedChange} />
@@ -72,8 +78,8 @@ export default function Track(props) {
         <div className="mr-5 track-length">
           {secondsToMinutesFormat(props.track.duration)}
         </div>
-
-        <AiOutlineEllipsis className="icon track-additional-options-icon" size="1.3em" />
+        
+        <AiOutlineEllipsis className="icon track-additional-options-icon" size="1.3em" onClick={handleWikiIconClick}/>     
       </div>
     </div>
   );

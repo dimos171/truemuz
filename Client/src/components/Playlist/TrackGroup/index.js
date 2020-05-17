@@ -11,6 +11,7 @@ TrackGroup.propTypes = {
   isPlaying: PropTypes.bool,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
+  changeWikiTrack: PropTypes.func,
   playerControl: PropTypes.object,
 };
 
@@ -23,6 +24,7 @@ export default function TrackGroup(props) {
     isPlaying,
     changeActiveTrack,
     changeIsPlaying,
+    changeWikiTrack
   } = props;
 
   const constainsAltervative = trackGroup.songs && trackGroup.songs.length > 1;
@@ -40,6 +42,7 @@ export default function TrackGroup(props) {
         isPlaying={isPlaying}
         changeActiveTrack={changeActiveTrack}
         changeIsPlaying={changeIsPlaying}
+        changeWikiTrack={changeWikiTrack}
         playerControl = {props.playerControl}
       />
     );
@@ -55,6 +58,7 @@ export default function TrackGroup(props) {
         isPlaying={isPlaying}
         changeActiveTrack={changeActiveTrack}
         changeIsPlaying={changeIsPlaying}
+        changeWikiTrack={changeWikiTrack}
         mainVersion
         playerControl = {props.playerControl}
       />

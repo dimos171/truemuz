@@ -16,16 +16,16 @@ BandInfo.propTypes = {
 
 export default function BandInfo(props) {
   const [ wiki, setWiki ] = useState('');
-  const { activeTrack } = props;
+  const [ wikiTrack, setWikiTrack] = useState(null);
 
   useEffect(() => {
-    if(activeTrack) {
+    if(wikiTrack) {
       var songGroup = props.bandInfo.albums[0].songGroups.find((songGroup) => {
-        return songGroup.songs.find(s => s.id == activeTrack.id);
+        return songGroup.songs.find(s => s.id == wikiTrack.id);
       });
       setWiki(songGroup.wiki);
     }
-  }, [activeTrack]);
+  }, [wikiTrack]);
 
   return (
     <div className="d-flex">
@@ -34,6 +34,7 @@ export default function BandInfo(props) {
         isPlaying={props.isPlaying}
         changeActiveTrack={props.changeActiveTrack}
         changeIsPlaying={props.changeIsPlaying}
+        changeWikiTrack={setWikiTrack}
         bandInfo={props.bandInfo}
         playerControl = {props.playerControl}
       />
