@@ -60,8 +60,8 @@ export default function Track(props) {
     : <IoIosPlay className="mr-2 icon" onClick={handlePlayIconClick} />;
 
   const getSortIcon = () => props.collapsed
-    ? <FaSortAmountUp className="mr-5 icon" onClick={handlecollapsedChange} />
-    : <FaSortAmountDown className="mr-5 icon" onClick={handlecollapsedChange} />;
+    ? <FaSortAmountUp className="mr-4 mr-xl-5 icon" onClick={handlecollapsedChange} />
+    : <FaSortAmountDown className="mr-4 mr-xl-5 icon" onClick={handlecollapsedChange} />;
 
   return (
     <div className={"d-flex track-container justify-content-between" + (props.collapsed ? ' active' : '')}>
@@ -72,10 +72,10 @@ export default function Track(props) {
         </div>
       </div>
 
-      <div className="d-flex align-items-center mr-5">
+      <div className="d-flex align-items-center mr-4 mr-xl-5">
         {props.mainVersion && getContentBasedOnAlternatives()}
 
-        <div className="mr-5 track-length">
+        <div className="mr-4 mr-xl-5 track-length">
           {secondsToMinutesFormat(props.track.duration)}
         </div>
         

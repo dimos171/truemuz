@@ -50,12 +50,27 @@ export default function Player(props) {
     : <IoIosPlay className="icon mx-3" size="1.3em" onClick={handlePlayClick} />;
 
   useEffect(() => {
-    if (waveformContainerRef.current) {
+    const setDimensions = () => {
       setWaveformContainerDimensions({
         width: waveformContainerRef.current.offsetWidth,
         height: waveformContainerRef.current.offsetHeight,
       });
+    };
+
+    const handleWindowResize = () => {
+      setDimensions();
+    };
+
+    const disposeResources = () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+
+    if (waveformContainerRef.current) {
+      setDimensions();
+      window.addEventListener('resize', handleWindowResize);
     }
+
+    return disposeResources;
   }, [waveformContainerRef]);
 
   return (
