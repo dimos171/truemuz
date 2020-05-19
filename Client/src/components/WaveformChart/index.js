@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import styles from  '../../shared/variables/_colors.scss';
@@ -21,9 +21,10 @@ const ACTIVE_BAR_COLOR = styles.waveformBarActiveBarColor;
 export default function WaveformChart(props) {
   const canvasRef = useRef(null);
   const waveformData = useRef(null);
-  let lastMouseMoveTime = 0;
-  let hoveredBarsCount = 0;
-  let isCursorOnWaveform = false;
+
+  const [lastMouseMoveTime, setLastMouseMoveTime] = useState(0);
+  const [hoveredBarsCount, setHoveredBarsCount] = useState(0);
+  const [isCursorOnWaveform, setIsCursorOnWaveform] = useState(false);
 
   const handleMouseMove = (event) => {
     const now = +new Date;
@@ -31,32 +32,26 @@ export default function WaveformChart(props) {
     if (now - lastMouseMoveTime > MOUSE_MOVE_THRESHOLD) {
       const canvasCtx = setupCanvas(ACTIVE_BAR_COLOR);
       const barsCount = Math.floor(props.width / BARS_OFFSET);
-      const coloredBarsCount = Math.floor(event.nativeEvent.offsetX / BARS_OFFSET);
-      let x = BAR_WIDTH;
-  
-      for (let index = 0; index < coloredBarsCount; index++, x += BARS_OFFSET) {
-        drawLine(canvasCtx, x, props.height, waveformData.current[index]);
-      }
-  
-      canvasCtx.strokeStyle = DEFAULT_BAR_COLOR;
-  
-      for (let index = coloredBarsCount; index < barsCount; index++, x += BARS_OFFSET) {
-        drawLine(canvasCtx, x, props.height, waveformData.current[index]);
-      }
+      const coloredBarsCountByHover = Math.floor(event.nativeEvent.offsetX / BARS_OFFSET);
+      const alreadyPlayedBarsCount = Math.floor((props.currentPlayTime / props.activeTrack.duration) * barsCount);
 
-      lastMouseMoveTime = now;
-      hoveredBarsCount = coloredBarsCount;
-      isCursorOnWaveform = true;
+      setLastMouseMoveTime(now);
+      setHoveredBarsCount(coloredBarsCountByHover);
+      setIsCursorOnWaveform(true);
+  
+      drawWaveformData(canvasCtx, barsCount, alreadyPlayedBarsCount);
     }
   };
 
   const handleMouseLeave = () => {
-    const canvasCtx = setupCanvas(DEFAULT_BAR_COLOR);
+    const canvasCtx = setupCanvas(ACTIVE_BAR_COLOR);
     const barsCount = Math.floor(props.width / BARS_OFFSET);
+    const alreadyPlayedBarsCount = Math.floor((props.currentPlayTime / props.activeTrack.duration) * barsCount);
 
-    for (let index = 0, x = BAR_WIDTH; index < barsCount; index++, x += BARS_OFFSET) {
-      drawLine(canvasCtx, x, props.height, waveformData.current[index]);
-    }
+    setHoveredBarsCount(0);
+    setIsCursorOnWaveform(false);
+
+    drawWaveformData(canvasCtx, barsCount, alreadyPlayedBarsCount);
   };
 
   const setupCanvas = (strokeColor) => {
@@ -115,23 +110,38 @@ export default function WaveformChart(props) {
     return chunkedArray;
   };
 
-  useEffect(() => {
-    const canvasCtx = setupCanvas(ACTIVE_BAR_COLOR);
-    const barsCount = Math.floor(props.width / BARS_OFFSET);
-    const alreadyPlayedBarsCount = Math.floor((props.currentPlayTime / props.activeTrack.duration) * barsCount);
+  const drawWaveformData = (canvasCtx, barsCount, alreadyPlayedBarsCount) => {
     let x = BAR_WIDTH;
-
-    waveformData.current = getAverageSampleForWaveform(props.activeTrack.waveForm, barsCount);
+    let startIndexForEmptyBars = alreadyPlayedBarsCount;
 
     for (let index = 0; index < alreadyPlayedBarsCount; index++, x += BARS_OFFSET) {
       drawLine(canvasCtx, x, props.height, waveformData.current[index]);
     }
 
+    if (isCursorOnWaveform && hoveredBarsCount > alreadyPlayedBarsCount) {
+      canvasCtx.strokeStyle = HOVERED_BAR_COLOR;
+      startIndexForEmptyBars = hoveredBarsCount;
+
+      for (let index = alreadyPlayedBarsCount; index < hoveredBarsCount; index++, x += BARS_OFFSET) {
+        drawLine(canvasCtx, x, props.height, waveformData.current[index]);
+      }
+    }
+
     canvasCtx.strokeStyle = DEFAULT_BAR_COLOR;
 
-    for (let index = alreadyPlayedBarsCount; index < barsCount; index++, x += BARS_OFFSET) {
+    for (let index = startIndexForEmptyBars; index < barsCount; index++, x += BARS_OFFSET) {
       drawLine(canvasCtx, x, props.height, waveformData.current[index]);
     }
+  };
+
+  useEffect(() => {
+    const canvasCtx = setupCanvas(ACTIVE_BAR_COLOR);
+    const barsCount = Math.floor(props.width / BARS_OFFSET);
+    const alreadyPlayedBarsCount = Math.floor((props.currentPlayTime / props.activeTrack.duration) * barsCount);
+
+    waveformData.current = getAverageSampleForWaveform(props.activeTrack.waveForm, barsCount);
+
+    drawWaveformData(canvasCtx, barsCount, alreadyPlayedBarsCount);
   });
 
   return (
@@ -141,8 +151,8 @@ export default function WaveformChart(props) {
       width={props.width}
       height={props.height}
       onClick={handleMouseClick}
-      // onMouseMove={handleMouseMove}
-      // onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     ></canvas>
   );
 }
