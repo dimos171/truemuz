@@ -8,6 +8,9 @@ TrackDescription.propTypes = {
 };
 
 export default function TrackDescription(props) {
+  function createMarkup() {
+    return {__html: props.wiki};
+  }
   return (
     <div className="col-4 offset-1 px-0 mt-3 pt-2">
       <div>
@@ -16,8 +19,7 @@ export default function TrackDescription(props) {
         </h5>
       </div>
 
-      <div className="description-text">
-        {props.wiki}
+      <div className="description-text" dangerouslySetInnerHTML={createMarkup()}>   
       </div>
     </div>
   );

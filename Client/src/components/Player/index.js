@@ -40,14 +40,10 @@ export default function Player(props) {
     }
   };
   
-  const getVolumeForSlider = () => { 
-    props.playerControl.setVolume(volume);
-    return volume * 100;
-  }
+  props.playerControl.setVolume(volume);
 
-  const handleChangeVolume = (event, changedVolume) => {
-    setVolume(changedVolume / 100);
-  };
+  const getVolumeForSlider = () =>  volume * 100;
+  const handleChangeVolume = (event, changedVolume) => setVolume(changedVolume / 100);
 
   const handleNextTrackIconClick = () => {
     const nextTrack = getNextTrackForPlaylist(
