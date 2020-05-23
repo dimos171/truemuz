@@ -9,6 +9,7 @@ import Slider from '@material-ui/core/Slider';
 
 import WaveformChart from '../WaveformChart';
 import { secondsToMinutesFormat, getNextTrackForPlaylist, getPreviousTrackForPlaylist } from '../../shared/utilities';
+import { streamLinkType } from '../../shared/enums/streamLinkType';
 import './index.scss';
 
 Player.propTypes = {
@@ -39,7 +40,10 @@ export default function Player(props) {
     }
   };
   
-  const getVolumeForSlider = () => volume * 100;
+  const getVolumeForSlider = () => { 
+    props.playerControl.setVolume(volume);
+    return volume * 100;
+  }
 
   const handleChangeVolume = (event, changedVolume) => {
     setVolume(changedVolume / 100);
@@ -50,11 +54,11 @@ export default function Player(props) {
       props.bandInfo.albums[0].songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
 
     props.changeActiveTrack(nextTrack);
+    var link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
+    props.playerControl.setSrc(link);
 
     if (props.isPlaying) {
-      setTimeout(() => {
-        props.playerControl.play();  
-      }, 300); 
+      props.playerControl.play(); 
     }
   };
 
@@ -63,11 +67,11 @@ export default function Player(props) {
       props.bandInfo.albums[0].songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
 
     props.changeActiveTrack(previousTrack);
+    var link = previousTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
+    props.playerControl.setSrc(link);
 
     if (props.isPlaying) {
-      setTimeout(() => {
-        props.playerControl.play();  
-      }, 300); 
+        props.playerControl.play();
     }
   };
 

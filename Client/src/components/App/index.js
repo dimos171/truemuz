@@ -32,18 +32,17 @@ export default function App() {
         {activeTrack && (
           <Player
             activeTrack={activeTrack}
+            changeActiveTrack={setActiveTrack}    
             isPlaying={isPlaying}
             changeIsPlaying={setIsPlaying}
-            changeActiveTrack={setActiveTrack}    
-            currentPlayTime={currentPlayTime}
             playerControl={playerControl}
             bandInfo={bandInfo}
+            currentPlayTime={currentPlayTime}
             isMasterFilterEnabled={isMasterFilterEnabled}
           />
         )}
       </div>
       <VideoJsPlayer
-        activeTrack={activeTrack}
         changeCurrentPlayTime={setCurrentPlayTime}
         setOuterControl={setPlayerControl}
       />
