@@ -56,7 +56,7 @@ export default function Playlist(props) {
             changeActiveTrack={props.changeActiveTrack}
             changeIsPlaying={props.changeIsPlaying}
             changeWikiTrack={props.changeWikiTrack}
-            playerControl = {props.playerControl}
+            playerControl={props.playerControl}
           />
         )}
       </div>

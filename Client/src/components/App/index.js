@@ -15,11 +15,11 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPlayTime, setCurrentPlayTime] = useState(0);
   const [playerControl, setPlayerControl] = useState(null);
+  const [isMasterFilterEnabled, setIsMasterFilterEnabled] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
-      const data = await getBandInfoByName('Modernova');
-      setBandInfo(data);
+      setBandInfo(await getBandInfoByName('Modernova'));
     };
 
     loadData();
@@ -33,9 +33,12 @@ export default function App() {
           <Player
             activeTrack={activeTrack}
             isPlaying={isPlaying}
-            changeIsPlaying={setIsPlaying}          
+            changeIsPlaying={setIsPlaying}
+            changeActiveTrack={setActiveTrack}    
             currentPlayTime={currentPlayTime}
             playerControl={playerControl}
+            bandInfo={bandInfo}
+            isMasterFilterEnabled={isMasterFilterEnabled}
           />
         )}
       </div>
@@ -54,7 +57,7 @@ export default function App() {
                 changeActiveTrack={setActiveTrack}
                 isPlaying={isPlaying}        
                 changeIsPlaying={setIsPlaying}       
-                playerControl = {playerControl}
+                playerControl={playerControl}
                 bandInfo={bandInfo}
               />
             ) : (

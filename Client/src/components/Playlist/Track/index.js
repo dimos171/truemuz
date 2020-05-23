@@ -37,9 +37,8 @@ export default function Track(props) {
       }  
       
       setTimeout(() => {
-          props.playerControl.play();  
-      }, 300);
-        
+        props.playerControl.play();  
+      }, 300); 
     } else {
       props.changeIsPlaying(!props.isPlaying);
       props.playerControl.play();

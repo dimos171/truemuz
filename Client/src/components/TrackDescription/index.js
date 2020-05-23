@@ -5,7 +5,7 @@ import './index.scss';
 
 TrackDescription.propTypes = {
   wiki: PropTypes.string,
-}
+};
 
 export default function TrackDescription(props) {
   return (

@@ -15,17 +15,17 @@ BandInfo.propTypes = {
 };
 
 export default function BandInfo(props) {
-  const [ wiki, setWiki ] = useState('');
-  const [ wikiTrack, setWikiTrack] = useState(null);
+  const [wiki, setWiki] = useState('');
+  const [wikiTrack, setWikiTrack] = useState(null);
 
   useEffect(() => {
-    if(wikiTrack) {
-      var songGroup = props.bandInfo.albums[0].songGroups.find((songGroup) => {
-        return songGroup.songs.find(s => s.id == wikiTrack.id);
-      });
+    if (wikiTrack) {
+      const songGroup = props.bandInfo.albums[0].songGroups
+        .find(songGroup => songGroup.songs.find(s => s.id == wikiTrack.id));
+
       setWiki(songGroup.wiki);
     }
-  }, [wikiTrack]);
+  }, [wikiTrack, props.bandInfo]);
 
   return (
     <div className="d-flex">
@@ -36,11 +36,12 @@ export default function BandInfo(props) {
         changeIsPlaying={props.changeIsPlaying}
         changeWikiTrack={setWikiTrack}
         bandInfo={props.bandInfo}
-        playerControl = {props.playerControl}
+        playerControl={props.playerControl}
       />
       <TrackCover />
       <TrackDescription 
-        wiki={wiki}/>
+        wiki={wiki}
+      />
     </div>
   );
 }

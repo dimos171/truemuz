@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import loadVideoJsLibrary from './load-videojs-lib';
-import loadVideoJsHlsLibrary from './load-videojs-hls-lib';
 import { streamLinkType } from '../../shared/enums/streamLinkType';
 
 VideoJsPlayer.propTypes = {
@@ -18,7 +17,7 @@ export default function VideoJsPlayer(props) {
 
   useEffect(() => {
     const loadLibrary = async () => {
-      await Promise.all([loadVideoJsLibrary(), loadVideoJsHlsLibrary()]);
+      await loadVideoJsLibrary();
   
       const settings = {
         controls: false,
@@ -35,7 +34,7 @@ export default function VideoJsPlayer(props) {
         play: () => { player.play() },
         pause: () => { player.pause() },
         setVolume: (value) => { player.volume(value) },
-        setCurrentTime: (value) => { player.currentTime(value) }
+        setCurrentTime: (value) => { player.currentTime(value) },
       });
     };
   
