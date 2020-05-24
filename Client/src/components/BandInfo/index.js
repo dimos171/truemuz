@@ -15,17 +15,19 @@ BandInfo.propTypes = {
 };
 
 export default function BandInfo(props) {
+  const { bandInfo } = props;
+
   const [wiki, setWiki] = useState('');
   const [wikiTrack, setWikiTrack] = useState(null);
 
   useEffect(() => {
     if (wikiTrack) {
-      const songGroup = props.bandInfo.albums[0].songGroups
+      const songGroup = bandInfo.album.songGroups
         .find(songGroup => songGroup.songs.find(s => s.id == wikiTrack.id));
 
       setWiki(songGroup.wiki);
     }
-  }, [wikiTrack, props.bandInfo]);
+  }, [wikiTrack, bandInfo]);
 
   return (
     <div className="d-flex">
@@ -35,10 +37,13 @@ export default function BandInfo(props) {
         changeActiveTrack={props.changeActiveTrack}
         changeIsPlaying={props.changeIsPlaying}
         changeWikiTrack={setWikiTrack}
-        bandInfo={props.bandInfo}
+        bandInfo={bandInfo}
         playerControl={props.playerControl}
       />
-      <TrackCover />
+      <TrackCover 
+        bandName={bandInfo.name}
+        albumName={bandInfo.album.name}
+        members={bandInfo.members}/>
       <TrackDescription 
         wiki={wiki}
       />

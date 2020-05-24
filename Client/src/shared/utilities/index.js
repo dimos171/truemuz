@@ -44,6 +44,10 @@ export const getPreviousTrackForPlaylist = (songGroups, activeTrackId, isMasterF
   return activeSongGroup.songs[activeTrackPosition - 1];
 };
 
+export const getBlobBaseUrl = () => {
+  return "https://truemuz.blob.core.windows.net/songs";
+};
+
 const getActiveSongGroupAndTrack = (songGroups, activeTrackId) => {
   const activeSongGroup = songGroups.find(sg => sg.songs.find(s => s.id === activeTrackId));
   const activeSongGroupPosition = songGroups.indexOf(activeSongGroup);

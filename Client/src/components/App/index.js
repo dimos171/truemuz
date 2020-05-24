@@ -19,7 +19,11 @@ export default function App() {
 
   useEffect(() => {
     const loadData = async () => {
-      setBandInfo(await getBandInfoByName('Modernova'));
+      let data = await getBandInfoByName('Modernova');
+      const album = data.albums[0];
+      delete data.albums;
+      data.album = album;
+      setBandInfo(data);
     };
 
     loadData();

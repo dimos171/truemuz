@@ -47,7 +47,7 @@ export default function Player(props) {
 
   const handleNextTrackIconClick = () => {
     const nextTrack = getNextTrackForPlaylist(
-      props.bandInfo.albums[0].songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
+      props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
 
     props.changeActiveTrack(nextTrack);
     var link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
@@ -60,7 +60,7 @@ export default function Player(props) {
 
   const handlePreviousTrackIconClick = () => {
     const previousTrack = getPreviousTrackForPlaylist(
-      props.bandInfo.albums[0].songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
+      props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
 
     props.changeActiveTrack(previousTrack);
     var link = previousTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);

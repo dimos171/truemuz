@@ -17,7 +17,7 @@ export default function Playlist(props) {
   const { bandInfo } = props;
 
   const getAlbumTrackCounts = () => {
-    const { songGroups } = bandInfo.albums[0];
+    const { songGroups } = bandInfo.album;
     let alternativeTracksCount = 0;
 
     songGroups.forEach(sg => {
@@ -39,7 +39,7 @@ export default function Playlist(props) {
         </div>
         <div className="d-flex">
           <div className="light-text pr-1">Album:</div>
-          <div>{bandInfo.albums[0].name} ({bandInfo.albums[0].year})</div>
+          <div>{bandInfo.album.name} ({bandInfo.album.year})</div>
         </div>
         <div className="small-text">
           {getAlbumTrackCounts()}
@@ -47,7 +47,7 @@ export default function Playlist(props) {
       </div>
 
       <div className="playlist-tracks ml-n5">
-        {bandInfo.albums[0].songGroups.map((trackGroup, index) =>
+        {bandInfo.album.songGroups.map((trackGroup, index) =>
           <TrackGroup
             key={index}
             trackGroup={trackGroup}
