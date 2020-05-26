@@ -361,14 +361,14 @@ namespace TimeTriggers
             }
         }
 
-        private static IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, decimal[] peaks, decimal duration)> ValidateWaveForms(List<Artist> artists)
+        private static IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, double[] peaks, double duration)> ValidateWaveForms(List<Artist> artists)
         {
             IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, string format)> songsWithoutWaveForms = artists.SelectMany(ar => ar.Albums
                 .SelectMany(al => al.SongGroups
                 .SelectMany(sg => sg.Songs
                 ?.Select(s => (ar.Name, al.Name, sg.Name, s.BlobName, s.Format)))));
 
-            var validationOutput = new List<(string artistName, string albumName, string songGroupName, string blobName, decimal[] peaks, decimal duration)>();
+            var validationOutput = new List<(string artistName, string albumName, string songGroupName, string blobName, double[] peaks, double duration)>();
 
             foreach (var song in songsWithoutWaveForms)
             {
@@ -379,7 +379,7 @@ namespace TimeTriggers
             return validationOutput;
         }
 
-        private static (decimal[] array, decimal duration) GetWaveFormArray(string artistName, string albumName, string songGroupName, string songBlobName, string format)
+        private static (double[] array, double duration) GetWaveFormArray(string artistName, string albumName, string songGroupName, string songBlobName, string format)
         {
             var url = string.Join('/', new List<string> { _blobStorage, artistName, albumName, songGroupName, songBlobName + format });
 
@@ -392,14 +392,14 @@ namespace TimeTriggers
                 var samplesPerPixel = (int)(samples / 1000);
                 peakProvider.Init(reader, samplesPerPixel, 1000);
 
-                var duration = Decimal.Round((decimal)reader.TotalTime.TotalSeconds, 2);
+                var duration = (double)Decimal.Round((decimal)reader.TotalTime.TotalSeconds, 2);
                 var peaks = GetPeaks(peakProvider);
 
                 return (peaks, duration);
             }
         }
 
-        private static decimal[] GetPeaks(PeakProvider peakProvider)
+        private static double[] GetPeaks(PeakProvider peakProvider)
         {
             decimal[] array = new decimal[1000];
             int x = 0;
@@ -414,15 +414,15 @@ namespace TimeTriggers
             return Smooth(array);
         }
 
-        private static decimal[] Smooth(decimal[] array)
+        private static double[] Smooth(decimal[] array)
         {
             var avg = Queryable.Average(array.AsQueryable());
-            var ret = new decimal[array.Length];
+            var ret = new double[array.Length];
             for (var i = 0; i <array.Length; i++)
             {
-                var prev = i > 0 ? ret[i - 1] : array[i];
+                var prev = i > 0 ? (decimal)ret[i - 1] : array[i];
                 var next = i < array.Length ? array[i] : array[i - 1];
-                ret[i] = decimal.Round(((avg + ((prev + next + array[i]) / 3)) / 2), 2);
+                ret[i] = (double)decimal.Round(((avg + ((prev + next + array[i]) / 3)) / 2), 2);
             }
 
             return ret;
