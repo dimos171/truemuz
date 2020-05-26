@@ -39,7 +39,7 @@ namespace TimeTriggers
             );
 
         [FunctionName("SongConsistencyValidator")]
-        public static async Task Run([TimerTrigger("0 0 * * * *")]TimerInfo myTimer, ILogger log)
+        public static async Task Run([TimerTrigger("*/5 * * * *")]TimerInfo myTimer, ILogger log)
         {
             try
             {
@@ -361,14 +361,14 @@ namespace TimeTriggers
             }
         }
 
-        private static IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, float[] peaks, double duration)> ValidateWaveForms(List<Artist> artists)
+        private static IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, decimal[] peaks, decimal duration)> ValidateWaveForms(List<Artist> artists)
         {
             IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, string format)> songsWithoutWaveForms = artists.SelectMany(ar => ar.Albums
                 .SelectMany(al => al.SongGroups
-                .SelectMany(sg => sg.Songs.Where(s => s.WaveForm?.Count() != 1000 || s.WaveForm == null)
+                .SelectMany(sg => sg.Songs
                 ?.Select(s => (ar.Name, al.Name, sg.Name, s.BlobName, s.Format)))));
 
-            var validationOutput = new List<(string artistName, string albumName, string songGroupName, string blobName, float[] peaks, double duration)>();
+            var validationOutput = new List<(string artistName, string albumName, string songGroupName, string blobName, decimal[] peaks, decimal duration)>();
 
             foreach (var song in songsWithoutWaveForms)
             {
@@ -379,7 +379,7 @@ namespace TimeTriggers
             return validationOutput;
         }
 
-        private static (float[] array, double duration) GetWaveFormArray(string artistName, string albumName, string songGroupName, string songBlobName, string format)
+        private static (decimal[] array, decimal duration) GetWaveFormArray(string artistName, string albumName, string songGroupName, string songBlobName, string format)
         {
             var url = string.Join('/', new List<string> { _blobStorage, artistName, albumName, songGroupName, songBlobName + format });
 
@@ -392,29 +392,40 @@ namespace TimeTriggers
                 var samplesPerPixel = (int)(samples / 1000);
                 peakProvider.Init(reader, samplesPerPixel, 1000);
 
-                var duration = reader.TotalTime.TotalSeconds;
+                var duration = Decimal.Round((decimal)reader.TotalTime.TotalSeconds, 2);
                 var peaks = GetPeaks(peakProvider);
 
                 return (peaks, duration);
             }
         }
 
-        private static float[] GetPeaks(PeakProvider peakProvider)
+        private static decimal[] GetPeaks(PeakProvider peakProvider)
         {
-            float[] array = new float[1000];
+            decimal[] array = new decimal[1000];
             int x = 0;
-            var currentPeak = peakProvider.GetNextPeak();
             while (x < 1000)
             {
                 var nextPeak = peakProvider.GetNextPeak();
 
-                array[x] = currentPeak;
+                array[x] = (decimal)nextPeak;
                 x++;
-
-                currentPeak = nextPeak;
             }
 
-            return array;
+            return Smooth(array);
+        }
+
+        private static decimal[] Smooth(decimal[] array)
+        {
+            var avg = Queryable.Average(array.AsQueryable());
+            var ret = new decimal[array.Length];
+            for (var i = 0; i <array.Length; i++)
+            {
+                var prev = i > 0 ? ret[i - 1] : array[i];
+                var next = i < array.Length ? array[i] : array[i - 1];
+                ret[i] = decimal.Round(((avg + ((prev + next + array[i]) / 3)) / 2), 2);
+            }
+
+            return ret;
         }
     }
 }
