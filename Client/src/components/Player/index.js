@@ -8,15 +8,19 @@ import { IoIosVolumeHigh, IoIosPlay } from "react-icons/io";
 import Slider from '@material-ui/core/Slider';
 
 import WaveformChart from '../WaveformChart';
-import { secondsToMinutesFormat } from '../../shared/utilities';
+import { secondsToMinutesFormat, getNextTrackForPlaylist, getPreviousTrackForPlaylist } from '../../shared/utilities';
+import { streamLinkType } from '../../shared/enums/streamLinkType';
 import './index.scss';
 
 Player.propTypes = {
   isPlaying: PropTypes.bool,
+  isMasterFilterEnabled: PropTypes.bool,
   activeTrack: PropTypes.object,
   currentPlayTime: PropTypes.number,
   changeIsPlaying: PropTypes.func,
+  changeActiveTrack: PropTypes.func,
   playerControl: PropTypes.object,
+  bandInfo: PropTypes.object,
 };
 
 export default function Player(props) {
@@ -36,14 +40,38 @@ export default function Player(props) {
     }
   };
   
-  const getVolumeForSlider = () => { 
-    props.playerControl.setVolume(volume);
-    return volume * 100;
-  }
+  props.playerControl.setVolume(volume);
 
-  const handleChangeVolume = (event, changedVolume) => {
-    setVolume(changedVolume / 100)
-  }
+  const getVolumeForSlider = () =>  volume * 100;
+  const handleChangeVolume = (event, changedVolume) => setVolume(changedVolume / 100);
+
+  const handleNextTrackIconClick = () => {
+    const nextTrack = getNextTrackForPlaylist(
+      props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
+
+    const link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
+
+    props.changeActiveTrack(nextTrack);
+    props.playerControl.setSrc(link);
+
+    if (props.isPlaying) {
+      props.playerControl.play(); 
+    }
+  };
+
+  const handlePreviousTrackIconClick = () => {
+    const previousTrack = getPreviousTrackForPlaylist(
+      props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
+
+    const link = previousTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
+    
+    props.changeActiveTrack(previousTrack);
+    props.playerControl.setSrc(link);
+
+    if (props.isPlaying) {
+      props.playerControl.play();
+    }
+  };
 
   const getPausePlayIcon = () => props.isPlaying
     ? <GiPauseButton className="icon mx-3" size="1.3em" onClick={handlePlayClick} />
@@ -111,9 +139,9 @@ export default function Player(props) {
           </div>
 
           <div className="d-flex justify-content-center col-2 p-0 ">
-            <MdSkipPrevious className="icon mx-3" size="1.3em" />
+            <MdSkipPrevious className="icon mx-3" size="1.3em" onClick={handlePreviousTrackIconClick} />
             {getPausePlayIcon()}
-            <MdSkipNext className="icon mx-3" size="1.3em" />
+            <MdSkipNext className="icon mx-3" size="1.3em" onClick={handleNextTrackIconClick} />
           </div>
 
           <div className="d-flex align-items-center col-2 offset-1 p-0">

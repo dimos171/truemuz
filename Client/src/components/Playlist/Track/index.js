@@ -6,6 +6,7 @@ import { AiOutlineEllipsis } from "react-icons/ai";
 import { IoIosPlay } from "react-icons/io";
 
 import { secondsToMinutesFormat } from '../../../shared/utilities';
+import { streamLinkType } from '../../../shared/enums/streamLinkType';
 import "./index.scss";
 
 Track.propTypes = {
@@ -22,24 +23,24 @@ Track.propTypes = {
   playerControl: PropTypes.object,
 };
 
-export default function Track(props) {
+function Track(props) {
   const handlecollapsedChange = () => props.collapsedChange(!props.collapsed);
 
   const getContentBasedOnAlternatives = () => props.constainsAltervative && getSortIcon();
 
   const handlePlayIconClick = () => {
     if (!props.isActiveTrack) {
+      const link = props.track.streamLinks.find(sl => sl.type === streamLinkType.HLS);
+
       props.changeActiveTrack(props.track);
+      props.playerControl.setSrc(link);
       props.changeWikiTrack(props.track);
       
       if (!props.isPlaying) {
         props.changeIsPlaying(!props.isPlaying);    
-      }  
+      }
       
-      setTimeout(() => {
-          props.playerControl.play();  
-      }, 300);
-        
+      props.playerControl.play();
     } else {
       props.changeIsPlaying(!props.isPlaying);
       props.playerControl.play();
@@ -84,3 +85,5 @@ export default function Track(props) {
     </div>
   );
 }
+
+export default React.memo(Track);
