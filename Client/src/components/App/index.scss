@@ -14,3 +14,13 @@
     padding-bottom: 150px;
   }
 }
+
+a {
+  color: $main-dark-theme-text-color;
+  text-decoration: none;
+}
+
+a:hover { 
+  color: $main-dark-theme-waveform-hovered-bar-color;
+  text-decoration: none;
+ }

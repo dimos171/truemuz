@@ -43,7 +43,8 @@ export default function BandInfo(props) {
       <TrackCover 
         bandName={bandInfo.name}
         albumName={bandInfo.album.name}
-        members={bandInfo.members}/>
+        members={bandInfo.members}
+        socialNet={bandInfo.socialNet}/>
       <TrackDescription 
         wiki={wiki}
       />
