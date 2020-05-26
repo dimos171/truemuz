@@ -13,8 +13,7 @@ TrackCover.propTypes = {
   socialNet: PropTypes.array,
 };
 
-export default function TrackCover(props) {
-
+function TrackCover(props) {
   const bandPath = `${getBlobBaseUrl()}/${props.bandName}`;
   const logoPath = `${bandPath}/${props.albumName}/Logo.jpg`;
 
@@ -53,3 +52,5 @@ export default function TrackCover(props) {
     </div>
   );
 }
+
+export default React.memo(TrackCover);

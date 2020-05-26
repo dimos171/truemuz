@@ -18,7 +18,7 @@ const DEFAULT_BAR_COLOR = styles.waveformBarDefaultColor;
 const HOVERED_BAR_COLOR = styles.waveformBarHoveredBarColor;
 const ACTIVE_BAR_COLOR = styles.waveformBarActiveBarColor;
 
-export default function WaveformChart(props) {
+function WaveformChart(props) {
   const canvasRef = useRef(null);
   const waveformData = useRef(null);
 
@@ -156,3 +156,5 @@ export default function WaveformChart(props) {
     ></canvas>
   );
 }
+
+export default React.memo(WaveformChart);

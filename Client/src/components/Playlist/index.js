@@ -13,7 +13,7 @@ Playlist.propTypes = {
   playerControl: PropTypes.object,
 };
 
-export default function Playlist(props) {
+function Playlist(props) {
   const { bandInfo } = props;
 
   const getAlbumTrackCounts = () => {
@@ -63,3 +63,5 @@ export default function Playlist(props) {
     </div>
   );
 }
+
+export default React.memo(Playlist);

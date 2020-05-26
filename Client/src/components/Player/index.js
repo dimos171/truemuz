@@ -49,8 +49,9 @@ export default function Player(props) {
     const nextTrack = getNextTrackForPlaylist(
       props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
 
+    const link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
+
     props.changeActiveTrack(nextTrack);
-    var link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
     props.playerControl.setSrc(link);
 
     if (props.isPlaying) {
@@ -62,12 +63,13 @@ export default function Player(props) {
     const previousTrack = getPreviousTrackForPlaylist(
       props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
 
+    const link = previousTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
+    
     props.changeActiveTrack(previousTrack);
-    var link = previousTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
     props.playerControl.setSrc(link);
 
     if (props.isPlaying) {
-        props.playerControl.play();
+      props.playerControl.play();
     }
   };
 

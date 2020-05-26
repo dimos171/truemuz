@@ -15,8 +15,8 @@ TrackGroup.propTypes = {
   playerControl: PropTypes.object,
 };
 
-export default function TrackGroup(props) {
-  const [ collapsed, setCollapsed ] = useState(false);
+function TrackGroup(props) {
+  const [collapsed, setCollapsed] = useState(false);
 
   const {
     trackGroup,
@@ -78,3 +78,5 @@ export default function TrackGroup(props) {
     </div>
   );
 }
+
+export default React.memo(TrackGroup);

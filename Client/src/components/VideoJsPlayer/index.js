@@ -8,7 +8,7 @@ VideoJsPlayer.propTypes = {
   setOuterControl: PropTypes.func,
 };
 
-export default function VideoJsPlayer(props) {
+function VideoJsPlayer(props) {
   const playerDomRef = useRef(null);
   const [player, setPlayer] = useState(null);
   const { changeCurrentPlayTime, setOuterControl } = props;
@@ -64,6 +64,12 @@ export default function VideoJsPlayer(props) {
   }, [player, changeCurrentPlayTime, setOuterControl]);
 
   return (
-    <video id="amp-player" className="d-none" ref={playerDomRef}> </video>
+    <video
+      id="amp-player"
+      className="d-none"
+      ref={playerDomRef}
+    ></video>
   );
 }
+
+export default React.memo(VideoJsPlayer);

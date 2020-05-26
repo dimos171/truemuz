@@ -48,7 +48,7 @@ export const getBlobBaseUrl = () => {
   return "https://truemuz.blob.core.windows.net/songs";
 };
 
-const getActiveSongGroupAndTrack = (songGroups, activeTrackId) => {
+export const getActiveSongGroupAndTrack = (songGroups, activeTrackId) => {
   const activeSongGroup = songGroups.find(sg => sg.songs.find(s => s.id === activeTrackId));
   const activeSongGroupPosition = songGroups.indexOf(activeSongGroup);
   const activeTrackPosition = activeSongGroup.songs.findIndex(s => s.id === activeTrackId);

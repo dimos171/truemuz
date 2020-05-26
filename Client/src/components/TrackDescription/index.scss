@@ -1,3 +1,14 @@
+@import '../../shared/variables/colors';
+
 .description-text {
   font-size: 0.9rem;
+
+  a {
+    color: $main-dark-theme-link-color !important;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline !important;
+    }
+  }
 }

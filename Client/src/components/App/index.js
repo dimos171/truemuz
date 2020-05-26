@@ -46,6 +46,7 @@ export default function App() {
           />
         )}
       </div>
+
       <VideoJsPlayer
         changeCurrentPlayTime={setCurrentPlayTime}
         setOuterControl={setPlayerControl}

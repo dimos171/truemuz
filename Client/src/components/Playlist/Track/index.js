@@ -23,22 +23,23 @@ Track.propTypes = {
   playerControl: PropTypes.object,
 };
 
-export default function Track(props) {
+function Track(props) {
   const handlecollapsedChange = () => props.collapsedChange(!props.collapsed);
 
   const getContentBasedOnAlternatives = () => props.constainsAltervative && getSortIcon();
 
   const handlePlayIconClick = () => {
     if (!props.isActiveTrack) {
-      props.changeActiveTrack(props.track);
-      var link = props.track.streamLinks.find(sl => sl.type === streamLinkType.HLS);
-      props.playerControl.setSrc(link);
+      const link = props.track.streamLinks.find(sl => sl.type === streamLinkType.HLS);
 
+      props.changeActiveTrack(props.track);
+      props.playerControl.setSrc(link);
       props.changeWikiTrack(props.track);
       
       if (!props.isPlaying) {
         props.changeIsPlaying(!props.isPlaying);    
       }
+      
       props.playerControl.play();
     } else {
       props.changeIsPlaying(!props.isPlaying);
@@ -84,3 +85,5 @@ export default function Track(props) {
     </div>
   );
 }
+
+export default React.memo(Track);
