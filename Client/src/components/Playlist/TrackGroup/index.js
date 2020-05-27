@@ -12,6 +12,7 @@ TrackGroup.propTypes = {
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
   changeWikiTrack: PropTypes.func,
+  wikiTrack: PropTypes.object,
   playerControl: PropTypes.object,
 };
 
@@ -25,11 +26,13 @@ function TrackGroup(props) {
     changeActiveTrack,
     changeIsPlaying,
     changeWikiTrack,
+    wikiTrack,
   } = props;
 
   const constainsAltervative = trackGroup.songs && trackGroup.songs.length > 1;
 
   const isActiveTrack = (activeTrack, track) => activeTrack != null && activeTrack.id === track.id;
+  const isActiveWiki = (wikiTrack, track) => wikiTrack != null && wikiTrack.id === track.id;
 
   const masterTrack = trackGroup.songs.find(s => s.isMaster);
 
@@ -39,6 +42,7 @@ function TrackGroup(props) {
         key={index}
         track={track}
         isActiveTrack={isActiveTrack(activeTrack, track)}
+        isActiveWiki={isActiveWiki(wikiTrack, track)}
         isPlaying={isPlaying}
         changeActiveTrack={changeActiveTrack}
         changeIsPlaying={changeIsPlaying}
@@ -55,6 +59,7 @@ function TrackGroup(props) {
         collapsedChange={setCollapsed}
         constainsAltervative={constainsAltervative}
         isActiveTrack={isActiveTrack(activeTrack, masterTrack)}
+        isActiveWiki={isActiveWiki(wikiTrack, masterTrack)}
         isPlaying={isPlaying}
         changeActiveTrack={changeActiveTrack}
         changeIsPlaying={changeIsPlaying}

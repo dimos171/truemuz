@@ -58,6 +58,7 @@ function BandInfo(props) {
         changeActiveTrack={props.changeActiveTrack}
         changeIsPlaying={props.changeIsPlaying}
         changeWikiTrack={setWikiTrack}
+        wikiTrack={wikiTrack}
         bandInfo={bandInfo}
         playerControl={props.playerControl}
       />
