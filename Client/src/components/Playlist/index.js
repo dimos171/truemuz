@@ -10,6 +10,7 @@ Playlist.propTypes = {
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
   changeWikiTrack: PropTypes.func,
+  wikiTrack: PropTypes.object,
   playerControl: PropTypes.object,
 };
 
@@ -56,6 +57,7 @@ function Playlist(props) {
             changeActiveTrack={props.changeActiveTrack}
             changeIsPlaying={props.changeIsPlaying}
             changeWikiTrack={props.changeWikiTrack}
+            wikiTrack={props.wikiTrack}
             playerControl={props.playerControl}
           />
         )}

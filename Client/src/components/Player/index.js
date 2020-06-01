@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FaRandom } from "react-icons/fa";
 import { MdSkipNext, MdSkipPrevious } from "react-icons/md";
-import { GiPauseButton } from "react-icons/gi";
+import { GiPauseButton, GiPlayButton } from "react-icons/gi";
 import { FiRepeat } from "react-icons/fi";
-import { IoIosVolumeHigh, IoIosPlay } from "react-icons/io";
+import { IoIosVolumeHigh } from "react-icons/io";
 import Slider from '@material-ui/core/Slider';
 
 import WaveformChart from '../WaveformChart';
@@ -74,8 +74,8 @@ export default function Player(props) {
   };
 
   const getPausePlayIcon = () => props.isPlaying
-    ? <GiPauseButton className="icon mx-3" size="1.3em" onClick={handlePlayClick} />
-    : <IoIosPlay className="icon mx-3" size="1.3em" onClick={handlePlayClick} />;
+    ? <GiPauseButton className="icon mx-3" size="1.5em" onClick={handlePlayClick} />
+    : <GiPlayButton className="icon mx-3" size="1.5em" onClick={handlePlayClick} />;
 
   useEffect(() => {
     const setDimensions = () => {
@@ -133,19 +133,19 @@ export default function Player(props) {
 
         <div className="d-flex align-items-center py-3">
           <div className="d-flex justify-content-end col-5 p-0">
-            <FaRandom className="icon mx-3" />
+            <FaRandom className="icon mx-3"/>
             <div className="col-1"></div>
-            <FiRepeat className="icon mx-3" />
+            <FiRepeat className="icon mx-3"/>
           </div>
 
           <div className="d-flex justify-content-center col-2 p-0 ">
-            <MdSkipPrevious className="icon mx-3" size="1.3em" onClick={handlePreviousTrackIconClick} />
+            <MdSkipPrevious className="icon mx-3" size="1.6em" onClick={handlePreviousTrackIconClick} />
             {getPausePlayIcon()}
-            <MdSkipNext className="icon mx-3" size="1.3em" onClick={handleNextTrackIconClick} />
+            <MdSkipNext className="icon mx-3" size="1.6em" onClick={handleNextTrackIconClick} />
           </div>
 
           <div className="d-flex align-items-center col-2 offset-1 p-0">
-            <IoIosVolumeHigh className="icon mr-3" size="1.2em" />
+            <IoIosVolumeHigh className="icon mr-3" size="1.6em" />
             <Slider
               aria-labelledby="continuous-slider"
               className="volume-slider"

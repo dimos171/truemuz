@@ -1,7 +1,11 @@
 @import '../../../shared/variables/colors';
 
 .collapsed {
-  background: $main-dark-theme-collapsed-track-background;
+  background: linear-gradient(
+    90deg,
+    $main-dark-theme-collapsed-track-background 0%,
+    $main-dark-theme-background-color 100%);
+  box-shadow: 0px 4px 4px $main-dark-theme-active-track-shadow;
 }
 
 .track-group-enter {
