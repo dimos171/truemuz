@@ -6,7 +6,8 @@ namespace TimeTriggers
     public class ConfigWrapper
     {
         public ConfigWrapper(string subcriptionId, string resourceGroup, string accountName, string aadTenantId, 
-            string aadClientId, string aadSecret, string armAadAudience, string aadEndpoint, string armEnpoint, string region)
+            string aadClientId, string aadSecret, string armAadAudience, string aadEndpoint, string armEnpoint, string region,
+            string waveFormSmoothingRate)
         {
             SubscriptionId = subcriptionId;
             ResourceGroup = resourceGroup;
@@ -18,6 +19,7 @@ namespace TimeTriggers
             AadEndpoint = new Uri(aadEndpoint);
             ArmEndpoint = new Uri(armEnpoint);
             Region = region;
+            WaveFormSmoothingRate = Convert.ToDouble(waveFormSmoothingRate);
         }
 
         public string SubscriptionId { get; }
@@ -39,5 +41,7 @@ namespace TimeTriggers
         public Uri ArmEndpoint { get; }
 
         public string Region { get; }
+
+        public double WaveFormSmoothingRate { get; }
     }
 }

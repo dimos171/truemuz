@@ -14,6 +14,9 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Rest;
 using Microsoft.Rest.Azure.Authentication;
 using NAudio.Wave;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System.IO;
 
 namespace TimeTriggers
 {
@@ -35,11 +38,12 @@ namespace TimeTriggers
                 Environment.GetEnvironmentVariable("ArmAadAudience"),
                 Environment.GetEnvironmentVariable("AadEndpoint"),
                 Environment.GetEnvironmentVariable("ArmEndpoint"),
-                Environment.GetEnvironmentVariable("Region")
+                Environment.GetEnvironmentVariable("Region"),
+                Environment.GetEnvironmentVariable("WaveFormSmoothingRate")
             );
 
         [FunctionName("SongConsistencyValidator")]
-        public static async Task Run([TimerTrigger("*/5 * * * *")]TimerInfo myTimer, ILogger log)
+        public static async Task Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer, ILogger log)
         {
             try
             {
@@ -74,7 +78,7 @@ namespace TimeTriggers
                     collection.UpdateOne(filter, update);
                 }
 
-                var waveFormsToAdd = ValidateWaveForms(artists);
+                var waveFormsToAdd = await ValidateWaveForms(artists);
                 foreach (var waveForm in waveFormsToAdd)
                 {
                     var filter = Builders<BsonDocument>.Filter.Eq("name", waveForm.artistName);
@@ -361,7 +365,7 @@ namespace TimeTriggers
             }
         }
 
-        private static IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, double[] peaks, double duration)> ValidateWaveForms(List<Artist> artists)
+        private static async Task<IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, double[] peaks, double duration)>> ValidateWaveForms(List<Artist> artists)
         {
             IEnumerable<(string artistName, string albumName, string songGroupName, string blobName, string format)> songsWithoutWaveForms = artists.SelectMany(ar => ar.Albums
                 .SelectMany(al => al.SongGroups
@@ -372,30 +376,38 @@ namespace TimeTriggers
 
             foreach (var song in songsWithoutWaveForms)
             {
-                var waveForm = GetWaveFormArray(song.artistName, song.albumName, song.songGroupName, song.blobName, song.format);
+                var waveForm = await GetWaveFormArray(song.artistName, song.albumName, song.songGroupName, song.blobName, song.format);
                 validationOutput.Add((song.artistName, song.albumName, song.songGroupName, song.blobName, waveForm.array, waveForm.duration));
             }
 
             return validationOutput;
         }
 
-        private static (double[] array, double duration) GetWaveFormArray(string artistName, string albumName, string songGroupName, string songBlobName, string format)
+        private static async Task<(double[] array, double duration)> GetWaveFormArray(string artistName, string albumName, string songGroupName, string songBlobName, string format)
         {
             var url = string.Join('/', new List<string> { _blobStorage, artistName, albumName, songGroupName, songBlobName + format });
 
+            CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=truemuz;AccountKey=GNwCZBVP4mzZRKw++g0kfIqXaGPT9QBVePb3cMlK+ItocOLmEGEUk6pNYyr0FrKWURIYxQRRhrqbZlelV+b5mA==;EndpointSuffix=core.windows.net");
+            var blob = new CloudBlockBlob(new Uri(url), cloudStorageAccount.Credentials);
+
             var peakProvider = new PeakProvider();
 
-            using (var reader = new MediaFoundationReader(url))
+            using (MemoryStream ms = new MemoryStream())
             {
-                int bytesPerSample = (reader.WaveFormat.BitsPerSample / 8);
-                var samples = reader.Length / (bytesPerSample);
-                var samplesPerPixel = (int)(samples / 1000);
-                peakProvider.Init(reader, samplesPerPixel, 1000);
+                await blob.DownloadToStreamAsync(ms);
 
-                var duration = (double)Decimal.Round((decimal)reader.TotalTime.TotalSeconds, 2);
-                var peaks = GetPeaks(peakProvider);
+                using (var reader = new StreamMediaFoundationReader(ms))
+                {
+                    int bytesPerSample = (reader.WaveFormat.BitsPerSample / 8);
+                    var samples = reader.Length / (bytesPerSample);
+                    var samplesPerPixel = (int)(samples / 1000);
+                    peakProvider.Init(reader, samplesPerPixel, 1000);
 
-                return (peaks, duration);
+                    var duration = (double)Decimal.Round((decimal)reader.TotalTime.TotalSeconds, 2);
+                    var peaks = GetPeaks(peakProvider);
+
+                    return (peaks, duration);
+                }
             }
         }
 
@@ -416,7 +428,7 @@ namespace TimeTriggers
 
         private static double[] Smooth(decimal[] array)
         {
-            var avg = Queryable.Average(array.AsQueryable());
+            var avg = Queryable.Average(array.AsQueryable()) * (decimal)config.WaveFormSmoothingRate;
             var ret = new double[array.Length];
             for (var i = 0; i <array.Length; i++)
             {

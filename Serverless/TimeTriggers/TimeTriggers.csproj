@@ -4,6 +4,7 @@
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.4.2" />
     <PackageReference Include="DotNetCore.MongoDB" Version="11.13.0" />
     <PackageReference Include="Microsoft.Azure.Management.Media" Version="2.0.4" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.3" />
