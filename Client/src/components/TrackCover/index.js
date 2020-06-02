@@ -11,6 +11,7 @@ TrackCover.propTypes = {
   albumName: PropTypes.string,
   members: PropTypes.array,
   socialNet: PropTypes.array,
+  net: PropTypes.object,
 };
 
 function TrackCover(props) {
@@ -20,13 +21,13 @@ function TrackCover(props) {
   const SocialNerwork = (props) => {
     switch(props.net.type) {
       case 'fb':
-        return (<a href={props.net.link} target="_blank" className="p-2" ><AiOutlineFacebook className="social-net"></AiOutlineFacebook></a>);
+        return (<a href={props.net.link} target="_blank" rel="noopener noreferrer" className="p-2" ><AiOutlineFacebook className="social-net"></AiOutlineFacebook></a>);
       case 'inst':
-        return (<a href={props.net.link} target="_blank" className="p-2"><AiOutlineInstagram className="social-net"></AiOutlineInstagram></a>);
+        return (<a href={props.net.link} target="_blank" rel="noopener noreferrer" className="p-2"><AiOutlineInstagram className="social-net"></AiOutlineInstagram></a>);
       case 'vk':
-        return (<a href={props.net.link} target="_blank" className="p-2"><Icon24LogoVk className="social-net"/></a>)  
+        return (<a href={props.net.link} target="_blank" rel="noopener noreferrer" className="p-2"><Icon24LogoVk className="social-net"/></a>);
       default:
-        return (<a href={props.net.link} target="_blank" className="social-net p-2">{props.net.type}</a>);;
+        return (<a href={props.net.link} target="_blank" rel="noopener noreferrer" className="social-net p-2">{props.net.type}</a>);
     }
   };
 

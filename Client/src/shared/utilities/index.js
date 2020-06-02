@@ -44,9 +44,7 @@ export const getPreviousTrackForPlaylist = (songGroups, activeTrackId, isMasterF
   return activeSongGroup.songs[activeTrackPosition - 1];
 };
 
-export const getBlobBaseUrl = () => {
-  return "https://truemuz.blob.core.windows.net/songs";
-};
+export const getBlobBaseUrl = () => "https://truemuz.blob.core.windows.net/songs";
 
 export const getActiveSongGroupAndTrack = (songGroups, activeTrackId) => {
   const activeSongGroup = songGroups.find(sg => sg.songs.find(s => s.id === activeTrackId));
@@ -58,4 +56,16 @@ export const getActiveSongGroupAndTrack = (songGroups, activeTrackId) => {
     activeSongGroupPosition,
     activeTrackPosition,
   };
+};
+
+export const getRandomTrack = (songGroups, activeTrackId, isMasterFilterEnabled) => {
+  const songs = [].concat.apply([], songGroups.map(sg => sg.songs));
+
+  const filteredTracks = isMasterFilterEnabled
+    ? songs.filter(s => s.isMaster && s.id !== activeTrackId)
+    : songs.filter(s => s.id !== activeTrackId);
+
+  const randomIndex = Math.floor(Math.random() * filteredTracks.length);
+  
+  return filteredTracks[randomIndex];
 };

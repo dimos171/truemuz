@@ -16,6 +16,10 @@ body {
 
 .icon {
   cursor: pointer;
+
+  &.active {
+    color: $main-dark-theme-link-color !important;
+  }
 }
 
 h4 {
