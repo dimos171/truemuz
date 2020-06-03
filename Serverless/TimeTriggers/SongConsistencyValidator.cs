@@ -43,7 +43,7 @@ namespace TimeTriggers
             );
 
         [FunctionName("SongConsistencyValidator")]
-        public static async Task Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer, ILogger log)
+        public static async Task Run([TimerTrigger("0 */30 * * * *")]TimerInfo myTimer, ILogger log)
         {
             try
             {
@@ -401,7 +401,7 @@ namespace TimeTriggers
                     int bytesPerSample = (reader.WaveFormat.BitsPerSample / 8);
                     var samples = reader.Length / (bytesPerSample);
                     var samplesPerPixel = (int)(samples / 1000);
-                    peakProvider.Init(reader, samplesPerPixel, 1000);
+                    peakProvider.Init(reader, samplesPerPixel, 1000, (float)config.WaveFormSmoothingRate);
 
                     var duration = (double)Decimal.Round((decimal)reader.TotalTime.TotalSeconds, 2);
                     var peaks = GetPeaks(peakProvider);
@@ -413,31 +413,17 @@ namespace TimeTriggers
 
         private static double[] GetPeaks(PeakProvider peakProvider)
         {
-            decimal[] array = new decimal[1000];
+            double[] array = new double[1000];
             int x = 0;
             while (x < 1000)
             {
                 var nextPeak = peakProvider.GetNextPeak();
 
-                array[x] = (decimal)nextPeak;
+                array[x] = (double)decimal.Round((decimal)nextPeak, 2);
                 x++;
             }
 
-            return Smooth(array);
-        }
-
-        private static double[] Smooth(decimal[] array)
-        {
-            var avg = Queryable.Average(array.AsQueryable()) * (decimal)config.WaveFormSmoothingRate;
-            var ret = new double[array.Length];
-            for (var i = 0; i <array.Length; i++)
-            {
-                var prev = i > 0 ? (decimal)ret[i - 1] : array[i];
-                var next = i < array.Length ? array[i] : array[i - 1];
-                ret[i] = (double)decimal.Round(((avg + ((prev + next + array[i]) / 3)) / 2), 2);
-            }
-
-            return ret;
+            return array;
         }
     }
 }
