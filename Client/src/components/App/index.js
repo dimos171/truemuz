@@ -7,6 +7,8 @@ import Player from '../Player';
 import VideoJsPlayer from '../VideoJsPlayer';
 import BandInfo from '../BandInfo';
 import { getBandInfoByName } from '../../services/api-service';
+import { getNextTrackForPlaylist, getRandomTrack } from '../../shared/utilities';
+import { streamLinkType } from '../../shared/enums/streamLinkType';
 import './index.scss';
 
 export default function App() {
@@ -16,6 +18,8 @@ export default function App() {
   const [currentPlayTime, setCurrentPlayTime] = useState(0);
   const [playerControl, setPlayerControl] = useState(null);
   const [isMasterFilterEnabled, setIsMasterFilterEnabled] = useState(false);
+  const [isRepeatFilterEnabled, setIsRepeatFilterEnabled] = useState(false);
+  const [isRandomOrderEnabled, setIsRandomOrderEnabled] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -43,6 +47,11 @@ export default function App() {
             bandInfo={bandInfo}
             currentPlayTime={currentPlayTime}
             isMasterFilterEnabled={isMasterFilterEnabled}
+            isRepeatFilterEnabled={isRepeatFilterEnabled}
+            isRandomOrderEnabled={isRandomOrderEnabled}
+            changeMasterFilter={setIsMasterFilterEnabled}
+            changeRepeatFilter={setIsRepeatFilterEnabled}
+            changeRandomOrder={setIsRandomOrderEnabled}
           />
         )}
       </div>

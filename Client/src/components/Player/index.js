@@ -8,22 +8,27 @@ import { IoIosVolumeHigh } from "react-icons/io";
 import Slider from '@material-ui/core/Slider';
 
 import WaveformChart from '../WaveformChart';
-import { secondsToMinutesFormat, getNextTrackForPlaylist, getPreviousTrackForPlaylist } from '../../shared/utilities';
+import { secondsToMinutesFormat, getNextTrackForPlaylist, getPreviousTrackForPlaylist, getRandomTrack } from '../../shared/utilities';
 import { streamLinkType } from '../../shared/enums/streamLinkType';
 import './index.scss';
 
 Player.propTypes = {
   isPlaying: PropTypes.bool,
   isMasterFilterEnabled: PropTypes.bool,
+  isRepeatFilterEnabled: PropTypes.bool,
+  isRandomOrderEnabled: PropTypes.bool,
   activeTrack: PropTypes.object,
   currentPlayTime: PropTypes.number,
   changeIsPlaying: PropTypes.func,
   changeActiveTrack: PropTypes.func,
+  changeMasterFilter: PropTypes.func,
+  changeRepeatFilter: PropTypes.func,
+  changeRandomOrder: PropTypes.func,
   playerControl: PropTypes.object,
   bandInfo: PropTypes.object,
 };
 
-export default function Player(props) {
+function Player(props) {
   const waveformContainerRef = useRef(null);
   const [waveformContainerDimensions, setWaveformContainerDimensions] = useState({ width: 0, height: 0 });
   const [volume, setVolume] = useState(1);
@@ -34,8 +39,7 @@ export default function Player(props) {
     // Also the same fix applied in Track component
     if (!props.isPlaying) {
       props.playerControl.play();
-    }
-    else {
+    } else {
       props.playerControl.pause();
     }
   };
@@ -43,11 +47,13 @@ export default function Player(props) {
   props.playerControl.setVolume(volume);
 
   const getVolumeForSlider = () =>  volume * 100;
+  
   const handleChangeVolume = (event, changedVolume) => setVolume(changedVolume / 100);
 
   const handleNextTrackIconClick = () => {
-    const nextTrack = getNextTrackForPlaylist(
-      props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
+    const nextTrack = props.isRandomOrderEnabled
+      ? getRandomTrack(props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled)
+      : getNextTrackForPlaylist(props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
 
     const link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
 
@@ -60,8 +66,9 @@ export default function Player(props) {
   };
 
   const handlePreviousTrackIconClick = () => {
-    const previousTrack = getPreviousTrackForPlaylist(
-      props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
+    const previousTrack = props.isRandomOrderEnabled
+      ? getRandomTrack(props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled)
+      : getPreviousTrackForPlaylist(props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterFilterEnabled);
 
     const link = previousTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
     
@@ -76,6 +83,12 @@ export default function Player(props) {
   const getPausePlayIcon = () => props.isPlaying
     ? <GiPauseButton className="icon mx-3" size="1.5em" onClick={handlePlayClick} />
     : <GiPlayButton className="icon mx-3" size="1.5em" onClick={handlePlayClick} />;
+
+  const handleRepeatIconClick = () => props.changeRepeatFilter(!props.isRepeatFilterEnabled);
+
+  const handleMasterIconClick = () => props.changeMasterFilter(!props.isMasterFilterEnabled);
+
+  const handleRandomIconClick = () => props.changeRandomOrder(!props.isRandomOrderEnabled);
 
   useEffect(() => {
     const setDimensions = () => {
@@ -133,9 +146,15 @@ export default function Player(props) {
 
         <div className="d-flex align-items-center py-3">
           <div className="d-flex justify-content-end col-5 p-0">
-            <FaRandom className="icon mx-3"/>
+            <FaRandom
+              className={"icon mx-3 " + (props.isRandomOrderEnabled ? 'active' : '')}
+              onClick={handleRandomIconClick}
+            />
             <div className="col-1"></div>
-            <FiRepeat className="icon mx-3"/>
+            <FiRepeat
+              className={"icon mx-3 " + (props.isRepeatFilterEnabled ? 'active' : '')}
+              onClick={handleRepeatIconClick}
+            />
           </div>
 
           <div className="d-flex justify-content-center col-2 p-0 ">
@@ -158,3 +177,5 @@ export default function Player(props) {
     </div>
   );
 }
+
+export default React.memo(Player);

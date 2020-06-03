@@ -63,14 +63,14 @@ function Track(props) {
 
   const getPausePlayTrackName = () => props.isActiveTrack && props.isPlaying
     ? <div className={"track-name icon " + (props.mainVersion ? '' : 'ml-3')} onClick={handlePauseIconClick}>{props.track.name}</div>
-    : <div className={"track-name icon " + (props.mainVersion ? '' : 'ml-3')} onClick={handlePlayIconClick}>{props.track.name}</div>
+    : <div className={"track-name icon " + (props.mainVersion ? '' : 'ml-3')} onClick={handlePlayIconClick}>{props.track.name}</div>;
 
   const getSortIcon = () => props.collapsed
     ? <FaSortAmountUp className="mr-4 mr-xl-5 icon" onClick={handlecollapsedChange} />
     : <FaSortAmountDown className="mr-4 mr-xl-5 icon" onClick={handlecollapsedChange} />;
 
   const getWikiIcon = () => props.isActiveWiki
-    ? <AiOutlineEye className="icon track-additional-options-icon active-wiki" size="1.3em" onClick={handleWikiIconClick}/>  
+    ? <AiOutlineEye className="icon track-additional-options-icon active" size="1.3em" onClick={handleWikiIconClick}/>  
     : props.mainVersion 
       ? <AiOutlineEye className="icon track-additional-options-icon" size="1.3em" onClick={handleWikiIconClick}/>
       : <AiOutlineEllipsis className="icon track-additional-options-icon" size="1.3em"/>;
