@@ -36,7 +36,7 @@ function TrackDescription(props) {
   );
 
   return (
-    <div className="col-4 offset-1 px-0 mt-3 pt-2">
+    <div className="track-description-container col-12 col-lg-4 offset-lg-1 px-0 mt-3 pt-2 order-2">
       <div>
         <h5 className="mb-3 pb-2">
           TRACK HISTORY

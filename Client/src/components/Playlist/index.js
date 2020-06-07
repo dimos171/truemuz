@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import TrackGroup from './TrackGroup';
+import './index.scss';
 
 Playlist.propTypes = {
   activeTrack: PropTypes.object,
@@ -29,9 +30,9 @@ function Playlist(props) {
   };
   
   return (
-    <div className="col-5 px-0 mt-3 pt-2">
+    <div className="col-12 col-lg-5 px-0 mt-3 pt-2 order-1 order-lg-0">
       <div className="playlist-description mb-3 pb-2">
-        <h5 className="mb-3 pb-2">
+        <h5 className="mb-3 pb-2 d-none d-lg-block">
           PLAYLIST
         </h5>
         <div className="d-flex">

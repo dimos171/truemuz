@@ -1,3 +1,6 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins/_breakpoints";
 @import '~bootstrap/scss/bootstrap';
 @import '../../shared/variables/colors';
 
@@ -8,10 +11,15 @@
     padding-top: 100px;
     padding-bottom: 24px;
     overflow-y: visible;
+
+    @include media-breakpoint-down(md) {
+      padding-top: 0px;
+      flex-direction: column;
+    }
   }
 
-  .visible-header {
-    padding-bottom: 150px;
+  .visible-player {
+    padding-bottom: 170px;
   }
 }
 

@@ -12,6 +12,10 @@
     box-shadow: 0px 4px 4px $main-dark-theme-active-track-shadow;
   }
 
+  .track-description {
+    max-width: 50%;
+  }
+
   .track-name {
     letter-spacing: 0.05em;
   }

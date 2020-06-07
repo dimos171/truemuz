@@ -5,7 +5,7 @@ import './index.scss';
 
 export default function Header() {
   return (
-    <header className="header-container px-5">
+    <header className="header-container px-5 d-none d-lg-block">
       <div className="header-container-filler"></div>
       <div className="header-container-content d-flex align-items-center">
         <div className="col-5 p-0">

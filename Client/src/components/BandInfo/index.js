@@ -6,6 +6,7 @@ import TrackDescription from '../TrackDescription';
 import TrackCover from '../TrackCover';
 import { getActiveSongGroupAndTrack } from '../../shared/utilities';
 import { streamLinkType } from '../../shared/enums/streamLinkType';
+import './index.scss';
 
 BandInfo.propTypes = {
   activeTrack: PropTypes.object,
@@ -51,7 +52,7 @@ function BandInfo(props) {
   }, [wikiTrack, bandInfo]);
 
   return (
-    <div className="d-flex">
+    <div className="d-flex band-info-container w-100">
       <Playlist
         activeTrack={props.activeTrack}
         isPlaying={props.isPlaying}

@@ -32,20 +32,22 @@ function TrackCover(props) {
   };
 
   return (
-    <div className="col-2 px-0 mt-3 pt-2">
-      <div className="d-flex align-items-center justify-content-center mb-5 pb-3">
+    <div className="col-12 col-lg-2 px-0 mt-3 pt-2 order-0">
+      <div className="align-items-center justify-content-center mb-5 pb-3 d-none d-lg-flex">
         {props.members.map((member) => {                    
             const src = `${bandPath}/${member.name}.png`;
             return (<img key={member.name} className="rounded-avatar mx-2" src={src} title={member.name}/>);
         })}
       </div>
-
-      <div className="cover-container">
-        <img className="cover-container-image p-2" src={logoPath} />
-        <div className="cover-container-border"></div>
+      
+      <div className="d-flex align-items-center justify-content-center">
+        <div className="cover-container">
+          <img className="cover-container-image p-2" src={logoPath} />
+          <div className="cover-container-border"></div>
+        </div>
       </div>
 
-      <div className="d-flex align-items-center justify-content-center mb-5 pb-3">
+      <div className="align-items-center justify-content-center d-none d-lg-flex">
           {props.socialNet.map((net) => {     
               return (<SocialNerwork key={net.type} net={net}/>);
           })}

@@ -34,7 +34,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="root-container mx-5">
+    <div className="root-container mx-3 mx-md-5">
       <Header />
       <div>
         {activeTrack && (
@@ -61,7 +61,7 @@ export default function App() {
         setOuterControl={setPlayerControl}
       />
 
-      <div className={`partial-view-container d-flex ${activeTrack ? 'visible-header' : ''}`}>
+      <div className={`partial-view-container d-flex ${activeTrack ? 'visible-player' : ''}`}>
         <Switch>
           <Route path="/">
             {bandInfo ? (

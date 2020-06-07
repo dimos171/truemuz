@@ -62,8 +62,8 @@ function Track(props) {
     : <IoIosPlay className="mr-2 icon" size="1.2em" onClick={handlePlayIconClick} />;
 
   const getPausePlayTrackName = () => props.isActiveTrack && props.isPlaying
-    ? <div className={"track-name icon " + (props.mainVersion ? '' : 'ml-3')} onClick={handlePauseIconClick}>{props.track.name}</div>
-    : <div className={"track-name icon " + (props.mainVersion ? '' : 'ml-3')} onClick={handlePlayIconClick}>{props.track.name}</div>;
+    ? <div className={"track-name text-truncate w-100 icon " + (props.mainVersion ? '' : 'ml-3')} onClick={handlePauseIconClick}>{props.track.name}</div>
+    : <div className={"track-name text-truncate w-100 icon " + (props.mainVersion ? '' : 'ml-3')} onClick={handlePlayIconClick}>{props.track.name}</div>;
 
   const getSortIcon = () => props.collapsed
     ? <FaSortAmountUp className="mr-4 mr-xl-5 icon" onClick={handlecollapsedChange} />
@@ -77,12 +77,12 @@ function Track(props) {
 
   return (
     <div className={"d-flex track-container justify-content-between" + (props.isActiveTrack && props.isPlaying ? ' active' : '')}>
-      <div className="d-flex align-items-center ml-5">
+      <div className="d-flex track-description align-items-center ml-5">
         {getPausePlayIcon()}
         {getPausePlayTrackName()}
       </div>
 
-      <div className="d-flex align-items-center mr-4 mr-xl-5">
+      <div className="d-flex align-items-center mr-md-4 mr-xl-5">
         {props.mainVersion && getContentBasedOnAlternatives()}
 
         <div className="mr-4 mr-xl-5 track-length">
