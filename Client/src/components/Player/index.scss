@@ -12,6 +12,10 @@
   &-content {
     height: 100%;
     border-top: solid 1px $main-dark-theme-border;
+
+    &-play-controls {
+      justify-content: space-evenly;
+    }
   }
 }
 

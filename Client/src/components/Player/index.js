@@ -81,8 +81,8 @@ function Player(props) {
   };
 
   const getPausePlayIcon = () => props.isPlaying
-    ? <GiPauseButton className="icon mx-3" size="1.5em" onClick={handlePlayClick} />
-    : <GiPlayButton className="icon mx-3" size="1.5em" onClick={handlePlayClick} />;
+    ? <GiPauseButton className="icon" size="1.5em" onClick={handlePlayClick} />
+    : <GiPlayButton className="icon" size="1.5em" onClick={handlePlayClick} />;
 
   const handleRepeatIconClick = () => props.changeRepeatFilter(!props.isRepeatFilterEnabled);
 
@@ -115,7 +115,7 @@ function Player(props) {
   }, [waveformContainerRef]);
 
   return (
-    <div className="player-container px-5">
+    <div className="player-container px-3 px-md-5">
       <div className="player-container-content pt-3">
         <div
           ref={waveformContainerRef}
@@ -145,25 +145,25 @@ function Player(props) {
         </div>
 
         <div className="d-flex align-items-center py-3">
-          <div className="d-flex justify-content-end col-5 p-0">
+          <div className="d-flex justify-content-end col-4 col-lg-5 p-0">
             <FaRandom
               className={"icon mx-3 " + (props.isRandomOrderEnabled ? 'active' : '')}
               onClick={handleRandomIconClick}
             />
-            <div className="col-1"></div>
+            <div className="col-1 d-none d-md-block"></div>
             <FiRepeat
-              className={"icon mx-3 " + (props.isRepeatFilterEnabled ? 'active' : '')}
+              className={"icon mx-3 mr-md-4 mr-xl-5 " + (props.isRepeatFilterEnabled ? 'active' : '')}
               onClick={handleRepeatIconClick}
             />
           </div>
 
-          <div className="d-flex justify-content-center col-2 p-0 ">
-            <MdSkipPrevious className="icon mx-3" size="1.6em" onClick={handlePreviousTrackIconClick} />
+          <div className="player-container-content-play-controls d-flex col-4 col-lg-2 p-0 ">
+            <MdSkipPrevious className="icon" size="1.6em" onClick={handlePreviousTrackIconClick} />
             {getPausePlayIcon()}
-            <MdSkipNext className="icon mx-3" size="1.6em" onClick={handleNextTrackIconClick} />
+            <MdSkipNext className="icon" size="1.6em" onClick={handleNextTrackIconClick} />
           </div>
 
-          <div className="d-flex align-items-center col-2 offset-1 p-0">
+          <div className="d-flex align-items-center col-4 col-lg-2 offset-lg-1 p-0">
             <IoIosVolumeHigh className="icon mr-3" size="1.6em" />
             <Slider
               aria-labelledby="continuous-slider"

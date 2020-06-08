@@ -58,12 +58,12 @@ function Track(props) {
   };
 
   const getPausePlayIcon = () => props.isActiveTrack && props.isPlaying
-    ? <GiPauseButton className="mr-2 icon" size="1.2em" onClick={handlePauseIconClick} />
-    : <IoIosPlay className="mr-2 icon" size="1.2em" onClick={handlePlayIconClick} />;
+    ? <GiPauseButton className="icon" size="1.2em" onClick={handlePauseIconClick} />
+    : <IoIosPlay className="icon" size="1.2em" onClick={handlePlayIconClick} />;
 
   const getPausePlayTrackName = () => props.isActiveTrack && props.isPlaying
-    ? <div className={"track-name text-truncate w-100 icon " + (props.mainVersion ? '' : 'ml-3')} onClick={handlePauseIconClick}>{props.track.name}</div>
-    : <div className={"track-name text-truncate w-100 icon " + (props.mainVersion ? '' : 'ml-3')} onClick={handlePlayIconClick}>{props.track.name}</div>;
+    ? <div className={"track-name text-truncate w-100 icon pl-2 " + (props.mainVersion ? '' : 'pl-4')} onClick={handlePauseIconClick}>{props.track.name}</div>
+    : <div className={"track-name text-truncate w-100 icon pl-2 " + (props.mainVersion ? '' : 'pl-4')} onClick={handlePlayIconClick}>{props.track.name}</div>;
 
   const getSortIcon = () => props.collapsed
     ? <FaSortAmountUp className="mr-4 mr-xl-5 icon" onClick={handlecollapsedChange} />
