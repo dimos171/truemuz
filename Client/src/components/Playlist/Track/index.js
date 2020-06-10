@@ -82,7 +82,7 @@ function Track(props) {
         {getPausePlayTrackName()}
       </div>
 
-      <div className="d-flex align-items-center mr-md-4 mr-xl-5">
+      <div className="d-flex align-items-center mr-lg-4 mr-xl-5">
         {props.mainVersion && getContentBasedOnAlternatives()}
 
         <div className="mr-4 mr-xl-5 track-length">
