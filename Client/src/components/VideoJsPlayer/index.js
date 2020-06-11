@@ -35,7 +35,7 @@ function VideoJsPlayer(props) {
         setCurrentTime: (value) => { player.currentTime(value) },
         setSrc: (value) => {
           player.src({
-            //src: value, TODO Use this on PROD.
+            //src: value.url, TODO Use this on PROD.
             src: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
             type: "application/x-mpegURL",
           });
@@ -68,6 +68,7 @@ function VideoJsPlayer(props) {
       id="amp-player"
       className="d-none"
       ref={playerDomRef}
+      playsInline
     ></video>
   );
 }
