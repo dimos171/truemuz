@@ -3,9 +3,9 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-    "AadClientId": "fd335174-be41-4946-9a95-0b2a09e174f7",
+    "AadClientId": "8a4856d5-10d3-4fa5-b8de-acc0026b627f",
     "AadEndpoint": "https://login.microsoftonline.com",
-    "AadSecret": "203e2b7a-a219-46e9-ab5d-ac81b2399802",
+    "AadSecret": "88da9e1d-8a20-4eb2-af9f-e92a1a1e7342",
     "AadTenantId": "79fa29a3-45fb-433b-812a-0b12ec768a73",
     "AccountName": "truemuz",
     "ArmAadAudience": "https://management.core.windows.net/",
