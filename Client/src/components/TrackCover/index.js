@@ -43,7 +43,7 @@ function TrackCover(props) {
       <div className="d-flex align-items-center justify-content-center">
         <div className="cover-container">
           <img className="cover-container-image p-2" src={logoPath} />
-          <div className="cover-container-border"></div>
+          <div className="cover-container-border d-none d-lg-block"></div>
         </div>
       </div>
 
