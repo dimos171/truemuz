@@ -116,7 +116,7 @@ function Player(props) {
 
   return (
     <div className="player-container px-3 px-md-5">
-      <div className="player-container-content pt-3">
+      <div className="player-container-content pt-2">
         <div
           ref={waveformContainerRef}
           className="waveform-container"
@@ -132,7 +132,7 @@ function Player(props) {
           )}
         </div>
 
-        <div className="d-flex justify-content-between active-track pt-3">
+        <div className="d-flex justify-content-between active-track pt-2">
           <div className="current-time">
             {secondsToMinutesFormat(props.currentPlayTime)}
           </div>
@@ -144,7 +144,7 @@ function Player(props) {
           </div>
         </div>
 
-        <div className="d-flex align-items-center py-3">
+        <div className="d-flex align-items-center py-2">
           <div className="d-flex justify-content-end col-4 col-lg-5 p-0">
             <FaRandom
               className={"icon mx-3 " + (props.isRandomOrderEnabled ? 'active' : '')}

@@ -1,21 +1,29 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
+import { MdKeyboardArrowUp } from "react-icons/md";
 import PropTypes from 'prop-types';
+import withSizes from 'react-sizes';
 
 import './index.scss';
 
 TrackDescription.propTypes = {
   wiki: PropTypes.string,
+  isPlayerVisible: PropTypes.bool,
+  isTablet: PropTypes.bool,
   changeTrack: PropTypes.func,
 };
 
+const mapSizesToProps = ({ width }) => ({
+  isTablet: width < 992,
+});
+
 function TrackDescription(props) {
-  const { wiki, changeTrack } = props;
+  const [isVisible, setIsVisible] = useState(false);
 
-  const descriptionParentRef = useRef(null);
+  const { wiki, changeTrack, isPlayerVisible } = props;
 
-  useEffect(() => {
-    if (wiki && descriptionParentRef && descriptionParentRef.current) {
-      const anchors = descriptionParentRef.current.getElementsByTagName('a');
+  const descriptionAppearsCallback = useCallback(node => {
+    if (node !== null && wiki) {
+      const anchors = node.getElementsByTagName('a');
 
       const handleLinkClick = (event) => {
         changeTrack(event.target.dataset.trackId);
@@ -29,23 +37,41 @@ function TrackDescription(props) {
   
   const getHtmlDescription = () => (
     <div
-      ref={descriptionParentRef}
+      ref={descriptionAppearsCallback}
       className="description-text"
-      dangerouslySetInnerHTML={{__html: props.wiki}}
+      dangerouslySetInnerHTML={{__html: wiki}}
     ></div>
   );
 
-  return (
-    <div className="track-description-container col-12 col-lg-4 offset-lg-1 px-0 mt-3 pt-2 order-2">
+  const toggleVisibility = () => {
+    document.body.style.overflowY = isVisible ? 'scroll' : 'hidden';
+    setIsVisible(!isVisible);
+  };
+
+  const getDesktopLayout = () => (
+    <div className="track-description-container-desktop col-12 col-lg-4 offset-lg-1 px-lg-0 mt-lg-3 pt-2 order-2">
       <div>
-        <h5 className="mb-3 pb-2">
+        <h6 className="mb-3 pb-2">
           TRACK HISTORY
-        </h5>
+        </h6>
       </div>
 
-      {props.wiki !== null && getHtmlDescription()}
+      {wiki !== null && getHtmlDescription()}
     </div>
   );
+
+  const getMobileLayout = () => wiki && (
+    <div className={`track-description-container-mobile text-center ${isPlayerVisible ? 'with-player' : ''} ${isVisible ? 'extended p-3 pt-4' : ''}`}>
+      <div onClick={toggleVisibility}>
+        <MdKeyboardArrowUp className="arrow-icon" size="1.6em" />
+        <div className="track-description-container-mobile-title">HISTORY OF CREATION</div>
+      </div>
+
+      {wiki !== null && isVisible && getHtmlDescription()}
+    </div>
+  );
+
+  return props.isTablet ? getMobileLayout() : getDesktopLayout();
 }
 
-export default React.memo(TrackDescription);
+export default React.memo(withSizes(mapSizesToProps)(TrackDescription));

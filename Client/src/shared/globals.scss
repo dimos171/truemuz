@@ -1,3 +1,6 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins/_breakpoints";
 @import './variables/colors';
 @import './variables/fonts';
 
@@ -8,6 +11,10 @@ body {
   font-size: 1rem;
   font-family: 'Raleway Regular';
   font-feature-settings: 'pnum' on, 'lnum' on;
+
+  @include media-breakpoint-down(md) {
+    font-size: 0.88rem;
+  }
 }
 
 .small-text {

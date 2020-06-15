@@ -18,10 +18,10 @@ BandInfo.propTypes = {
 };
 
 function BandInfo(props) {
-  const { bandInfo } = props;
-
   const [wiki, setWiki] = useState('');
   const [wikiTrack, setWikiTrack] = useState(null);
+
+  const { bandInfo } = props;
 
   const handleTrackClickInDescription = (targetTrackId) => {
     const {
@@ -41,6 +41,8 @@ function BandInfo(props) {
 
     setWikiTrack(selectedTrack);
   };
+
+  const isPlayerVisible = () => props.activeTrack !== null;
 
   useEffect(() => {
     if (wikiTrack) {
@@ -73,6 +75,7 @@ function BandInfo(props) {
 
       <TrackDescription 
         wiki={wiki}
+        isPlayerVisible={isPlayerVisible()}
         changeTrack={handleTrackClickInDescription}
       />
     </div>

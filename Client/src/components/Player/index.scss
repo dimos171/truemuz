@@ -1,9 +1,10 @@
 @import '../../shared/variables/colors';
+@import '../../shared/variables/values';
 
 .player-container {
   position: fixed;
   bottom: 0;
-  height: 146px;
+  height: $player-height;
   left: 0rem;
   right: 0rem;
   z-index: 1000;

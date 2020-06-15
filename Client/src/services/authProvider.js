@@ -7,7 +7,7 @@ const config = {
     authority: 'https://truemuz.b2clogin.com/truemuz.onmicrosoft.com/B2C_1_spa-react',
     clientId: '4696c1b9-b3b3-4b66-850e-4a8466ab7bc5',
     validateAuthority: false,
-    redirectUri: window.location.origin
+    redirectUri: window.location.origin,
   },
   cache: {
     cacheLocation: "localStorage",

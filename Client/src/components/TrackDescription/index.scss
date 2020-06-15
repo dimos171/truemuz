@@ -2,6 +2,7 @@
 @import "node_modules/bootstrap/scss/variables";
 @import "node_modules/bootstrap/scss/mixins/_breakpoints";
 @import '../../shared/variables/colors';
+@import '../../shared/variables/values';
 
 .description-text {
   font-size: 0.9rem;
@@ -17,9 +18,42 @@
 }
 
 @include media-breakpoint-down(md) {
-  .track-description-container {
+  .track-description-container-desktop {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .track-description-container-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 12px;
+    background: $main-dark-theme-history-title-background;
+
+    &-title {
+      height: $history-title-mobile-pinned-height;
+      line-height: $history-title-mobile-pinned-height;
+    }
+
+    &.with-player {
+      bottom: $player-height - 1;
+    }
+
+    &.extended {
+      top: 0;
+      background: $main-dark-theme-overlay-background;
+      overflow-y: scroll;
+
+      .arrow-icon {
+        top: 7px;
+      }
+    }
+
+    .arrow-icon {
+      position: absolute;
+      top: -13px;
+    }
   }
 }

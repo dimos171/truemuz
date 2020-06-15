@@ -12,6 +12,8 @@ $main-dark-theme-volume-slider-color: #8437E4;
 $main-dark-theme-waveform-active-bar-color: #5A1EA6;
 $main-dark-theme-waveform-hovered-bar-color: #9962dd;
 $main-dark-theme-link-color: #BB84FF;
+$main-dark-theme-overlay-background: linear-gradient(180deg, #292432 0%, #0E0C12 100%);
+$main-dark-theme-history-title-background: linear-gradient(180deg, rgba(40, 31, 56, 0) -12.5%, #302741 100%);
 
 :export {
   waveformBarDefaultColor: $main-dark-theme-text-color;

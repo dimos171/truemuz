@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
+import withSizes from 'react-sizes';
 
 import Header from '../Header';
 import Player from '../Player';
 import VideoJsPlayer from '../VideoJsPlayer';
 import BandInfo from '../BandInfo';
 import { getBandInfoByName } from '../../services/api-service';
-import { getNextTrackForPlaylist, getRandomTrack } from '../../shared/utilities';
-import { streamLinkType } from '../../shared/enums/streamLinkType';
 import './index.scss';
 
-export default function App() {
+App.propTypes = {
+  isTablet: PropTypes.bool,
+};
+
+const mapSizesToProps = ({ width }) => ({
+  isTablet: width < 992,
+});
+
+function App(props) {
   const [activeTrack, setActiveTrack] = useState(null);
   const [bandInfo, setBandInfo] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -32,6 +40,12 @@ export default function App() {
 
     loadData();
   }, []);
+
+  const getPlayerClass = () => activeTrack
+    ? props.isTablet
+      ? 'visible-player-mobile'
+      : 'visible-player'
+    : '';
 
   return (
     <div className="root-container mx-3 mx-md-5">
@@ -61,7 +75,7 @@ export default function App() {
         setOuterControl={setPlayerControl}
       />
 
-      <div className={`partial-view-container d-flex ${activeTrack ? 'visible-player' : ''}`}>
+      <div className={`partial-view-container d-flex ${getPlayerClass()}`}>
         <Switch>
           <Route path="/">
             {bandInfo ? (
@@ -84,3 +98,5 @@ export default function App() {
     </div>
   );
 }
+
+export default withSizes(mapSizesToProps)(App);
