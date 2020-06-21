@@ -1,0 +1,14 @@
+@mixin for-big-desktop-up {
+  @media (min-width: 1800px) { @content; }
+}
+
+@include for-big-desktop-up {
+  .col-xxl-5 {
+    flex: 0 0 41.66667%;
+    max-width: 41.66667%;
+  }
+
+  .offset-xxl-0 {
+    margin-left: 0;
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { MdKeyboardArrowUp } from "react-icons/md";
+import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import PropTypes from 'prop-types';
 import withSizes from 'react-sizes';
 
@@ -51,7 +51,7 @@ function TrackDescription(props) {
   };
 
   const getDesktopLayout = () => (
-    <div className="track-description-container-desktop col-12 col-lg-4 offset-lg-1 px-lg-0 mt-lg-3 pt-2 order-2">
+    <div className="track-description-container-desktop col-12 col-lg-4 col-xxl-5 offset-lg-1 offset-xxl-0 px-lg-0 mt-lg-3 pt-2 order-2">
       <div>
         <h6 className="mb-3 pb-2">
           TRACK HISTORY
@@ -65,7 +65,11 @@ function TrackDescription(props) {
   const getMobileLayout = () => wiki && (
     <div className={`track-description-container-mobile text-center ${isPlayerVisible ? 'with-player' : ''} ${isVisible ? 'extended p-3 pt-4' : ''}`}>
       <div onClick={toggleVisibility}>
-        <MdKeyboardArrowUp className="arrow-icon" size="1.6em" />
+        {isVisible ? (
+          <MdKeyboardArrowDown className="arrow-icon" size="1.6em" />
+        ): (
+          <MdKeyboardArrowUp className="arrow-icon" size="1.6em" />
+        )}
         <div className="track-description-container-mobile-title">HISTORY OF CREATION</div>
       </div>
 
