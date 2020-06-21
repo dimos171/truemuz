@@ -28,6 +28,7 @@ function App(props) {
   const [isMasterFilterEnabled, setIsMasterFilterEnabled] = useState(false);
   const [isRepeatFilterEnabled, setIsRepeatFilterEnabled] = useState(false);
   const [isRandomOrderEnabled, setIsRandomOrderEnabled] = useState(false);
+  const [collapsedSongGroups, setCollapsedSongGroups] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -35,7 +36,9 @@ function App(props) {
       const album = data.albums[0];
       delete data.albums;
       data.album = album;
+
       setBandInfo(data);
+      setCollapsedSongGroups(data.album.songGroups.map(() => false));
     };
 
     loadData();
@@ -46,6 +49,13 @@ function App(props) {
       ? 'visible-player-mobile'
       : 'visible-player'
     : '';
+
+  const changeCollapsedSongGroup = (index, value) => {
+    const updatedCollapsedSongGroups = [...collapsedSongGroups];
+
+    updatedCollapsedSongGroups[index] = value;
+    setCollapsedSongGroups(updatedCollapsedSongGroups);
+  };
 
   return (
     <div className="root-container mx-3 mx-md-5">
@@ -66,6 +76,7 @@ function App(props) {
             changeMasterFilter={setIsMasterFilterEnabled}
             changeRepeatFilter={setIsRepeatFilterEnabled}
             changeRandomOrder={setIsRandomOrderEnabled}
+            changeCollapsedSongGroup={changeCollapsedSongGroup}
           />
         )}
       </div>
@@ -86,6 +97,8 @@ function App(props) {
                 changeIsPlaying={setIsPlaying}       
                 playerControl={playerControl}
                 bandInfo={bandInfo}
+                collapsedSongGroups={collapsedSongGroups}
+                changeCollapsedSongGroup={changeCollapsedSongGroup}
               />
             ) : (
               <div>

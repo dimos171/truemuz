@@ -8,9 +8,11 @@ Playlist.propTypes = {
   activeTrack: PropTypes.object,
   bandInfo: PropTypes.object,
   isPlaying: PropTypes.bool,
+  collapsedSongGroups: PropTypes.array,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
   changeWikiTrack: PropTypes.func,
+  changeCollapsedSongGroup: PropTypes.func,
   wikiTrack: PropTypes.object,
   playerControl: PropTypes.object,
 };
@@ -52,12 +54,15 @@ function Playlist(props) {
         {bandInfo.album.songGroups.map((trackGroup, index) =>
           <TrackGroup
             key={index}
+            trackGroupIndex={index}
             trackGroup={trackGroup}
             activeTrack={props.activeTrack}
             isPlaying={props.isPlaying}
+            collapsed={props.collapsedSongGroups[index]}
             changeActiveTrack={props.changeActiveTrack}
             changeIsPlaying={props.changeIsPlaying}
             changeWikiTrack={props.changeWikiTrack}
+            changeCollapsedSongGroup={props.changeCollapsedSongGroup}
             wikiTrack={props.wikiTrack}
             playerControl={props.playerControl}
           />

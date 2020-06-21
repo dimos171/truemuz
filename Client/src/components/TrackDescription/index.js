@@ -24,16 +24,18 @@ function TrackDescription(props) {
   const descriptionAppearsCallback = useCallback(node => {
     if (node !== null && wiki) {
       const anchors = node.getElementsByTagName('a');
-
+      
       const handleLinkClick = (event) => {
+        event.preventDefault();
         changeTrack(event.target.dataset.trackId);
       };
 
       for (let anchor of anchors) {
-        anchor.addEventListener('click', handleLinkClick);
+        anchor.onclick = null;
+        anchor.onclick = handleLinkClick;
       }
     }
-  }, [wiki]);
+  }, [wiki, changeTrack]);
   
   const getHtmlDescription = () => (
     <div

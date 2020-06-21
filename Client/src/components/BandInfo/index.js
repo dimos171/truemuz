@@ -11,10 +11,12 @@ import './index.scss';
 BandInfo.propTypes = {
   activeTrack: PropTypes.object,
   bandInfo: PropTypes.object,
+  playerControl: PropTypes.object,
   isPlaying: PropTypes.bool,
+  collapsedSongGroups: PropTypes.array,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
-  playerControl: PropTypes.object,
+  changeCollapsedSongGroup: PropTypes.func,
 };
 
 function BandInfo(props) {
@@ -26,20 +28,20 @@ function BandInfo(props) {
   const handleTrackClickInDescription = (targetTrackId) => {
     const {
       activeSongGroup,
+      activeSongGroupPosition,
       activeTrackPosition,
     } = getActiveSongGroupAndTrack(bandInfo.album.songGroups, targetTrackId);
 
     const selectedTrack = activeSongGroup.songs[activeTrackPosition];
     
     props.changeActiveTrack(selectedTrack);
+    props.changeIsPlaying(true);
     props.playerControl.setSrc(selectedTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS));
     props.playerControl.play();
 
-    if (!props.isPlaying) {
-      props.changeIsPlaying(!props.isPlaying);    
+    if (!selectedTrack.isMaster) {
+      props.changeCollapsedSongGroup(activeSongGroupPosition, true);
     }
-
-    setWikiTrack(selectedTrack);
   };
 
   const isPlayerVisible = () => props.activeTrack !== null;
@@ -58,9 +60,11 @@ function BandInfo(props) {
       <Playlist
         activeTrack={props.activeTrack}
         isPlaying={props.isPlaying}
+        collapsedSongGroups={props.collapsedSongGroups}
         changeActiveTrack={props.changeActiveTrack}
         changeIsPlaying={props.changeIsPlaying}
         changeWikiTrack={setWikiTrack}
+        changeCollapsedSongGroup={props.changeCollapsedSongGroup}
         wikiTrack={wikiTrack}
         bandInfo={bandInfo}
         playerControl={props.playerControl}
