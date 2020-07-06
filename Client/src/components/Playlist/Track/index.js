@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { GiPauseButton } from "react-icons/gi";
 import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import { AiOutlineEye, AiOutlineEllipsis } from "react-icons/ai";
+import { AiOutlineEye } from "react-icons/ai";
 import { IoIosPlay } from "react-icons/io";
 
 import { secondsToMinutesFormat } from '../../../shared/utilities';
@@ -69,12 +69,6 @@ function Track(props) {
     ? <FaSortAmountUp className="mr-4 mr-xl-5 icon" onClick={handlecollapsedChange} />
     : <FaSortAmountDown className="mr-4 mr-xl-5 icon" onClick={handlecollapsedChange} />;
 
-  const getWikiIcon = () => props.isActiveWiki
-    ? <AiOutlineEye className="icon track-additional-options-icon active" size="1.3em" onClick={handleWikiIconClick}/>  
-    : props.mainVersion 
-      ? <AiOutlineEye className="icon track-additional-options-icon" size="1.3em" onClick={handleWikiIconClick}/>
-      : <AiOutlineEllipsis className="icon track-additional-options-icon" size="1.3em"/>;
-
   return (
     <div className={"d-flex track-container justify-content-between" + (props.isActiveTrack && props.isPlaying ? ' active' : '')}>
       <div className="d-flex track-description align-items-center ml-5">
@@ -89,7 +83,15 @@ function Track(props) {
           {secondsToMinutesFormat(props.track.duration)}
         </div>
 
-        {getWikiIcon()} 
+        {props.mainVersion ? (
+          <AiOutlineEye
+            size="1.3em"
+            className={"icon track-additional-options-icon" + (props.isActiveWiki ? ' active' : '')}
+            onClick={handleWikiIconClick}
+          />
+        ) : (
+          <div className="spacer"></div>
+        )}
       </div>
     </div>
   );

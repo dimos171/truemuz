@@ -1,17 +1,40 @@
-import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 
 import loadVideoJsLibrary from './load-videojs-lib';
 
-VideoJsPlayer.propTypes = {
-  changeCurrentPlayTime: PropTypes.func,
-  setOuterControl: PropTypes.func,
-};
-
-function VideoJsPlayer(props) {
+function VideoJsPlayer(props, ref) {
   const playerDomRef = useRef(null);
   const [player, setPlayer] = useState(null);
-  const { changeCurrentPlayTime, setOuterControl } = props;
+
+  useImperativeHandle(ref, () => ({
+    isPlayerReady: () => player,
+    play: () => {
+      player.play();
+    },
+    pause: () => {
+      player.pause();
+    },
+    setVolume: (value) => {
+      player.volume(value);
+    },
+    setCurrentTime: (value) => {
+      player.currentTime(value);
+    },
+    setSrc: (value) => {
+      player.src({
+        //src: value.url, TODO Use this on PROD.
+        src: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
+        type: "application/x-mpegURL",
+      });
+    },
+    setEventHandler: (eventName, eventHandler) => {
+      player.on(eventName, eventHandler);
+    },
+    removeEventHandler: (eventName) => {
+      player.off(eventName);
+    },
+    getCurrentPlayTime: () => player.currentTime(),
+  }));
 
   useEffect(() => {
     const loadLibrary = async () => {
@@ -27,41 +50,10 @@ function VideoJsPlayer(props) {
       };
       
       setPlayer(window.videojs(playerDomRef.current, settings));
-
-      setOuterControl({
-        play: () => { player.play() },
-        pause: () => { player.pause() },
-        setVolume: (value) => { player.volume(value) },
-        setCurrentTime: (value) => { player.currentTime(value) },
-        setSrc: (value) => {
-          player.src({
-            //src: value.url, TODO Use this on PROD.
-            src: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
-            type: "application/x-mpegURL",
-          });
-        },
-      });
-    };
-  
-    const handleTimeChange = () => {
-      changeCurrentPlayTime(player.currentTime());
-    };
-  
-    const disposeResourses = () => {
-      if (player) {
-        player.off('timeupdate', handleTimeChange);
-        player.dispose();
-      }
     };
 
     loadLibrary();
-
-    if (player) {
-      player.on('timeupdate', handleTimeChange);
-    }
-
-    return disposeResourses;
-  }, [player, changeCurrentPlayTime, setOuterControl]);
+  }, []);
 
   return (
     <video
@@ -73,4 +65,4 @@ function VideoJsPlayer(props) {
   );
 }
 
-export default React.memo(VideoJsPlayer);
+export default React.memo(forwardRef(VideoJsPlayer));

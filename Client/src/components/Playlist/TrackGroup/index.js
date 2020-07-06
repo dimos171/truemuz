@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 
@@ -9,16 +9,17 @@ TrackGroup.propTypes = {
   trackGroup: PropTypes.object,
   activeTrack: PropTypes.object,
   isPlaying: PropTypes.bool,
+  collapsed: PropTypes.bool,
   changeActiveTrack: PropTypes.func,
   changeIsPlaying: PropTypes.func,
   changeWikiTrack: PropTypes.func,
+  changeCollapsedSongGroup: PropTypes.func,
   wikiTrack: PropTypes.object,
   playerControl: PropTypes.object,
+  trackGroupIndex: PropTypes.number,
 };
 
 function TrackGroup(props) {
-  const [collapsed, setCollapsed] = useState(false);
-
   const {
     trackGroup,
     activeTrack,
@@ -36,6 +37,10 @@ function TrackGroup(props) {
 
   const masterTrack = trackGroup.songs.find(s => s.isMaster);
 
+  const handleCollapsedClick = (value) => {
+    props.changeCollapsedSongGroup(props.trackGroupIndex, value);
+  };
+
   const getAlternativeTracksMarkup = () =>
     trackGroup.songs.filter(s => !s.isMaster).map((track, index) => 
       <Track
@@ -52,11 +57,11 @@ function TrackGroup(props) {
     );
 
   return (
-    <div className={collapsed ? 'collapsed' : ''}>
+    <div className={props.collapsed ? 'collapsed' : ''}>
       <Track
         track={masterTrack}
-        collapsed={collapsed}
-        collapsedChange={setCollapsed}
+        collapsed={props.collapsed}
+        collapsedChange={handleCollapsedClick}
         constainsAltervative={constainsAltervative}
         isActiveTrack={isActiveTrack(activeTrack, masterTrack)}
         isActiveWiki={isActiveWiki(wikiTrack, masterTrack)}
@@ -70,7 +75,7 @@ function TrackGroup(props) {
 
       {constainsAltervative && (
         <CSSTransition
-          in={collapsed}
+          in={props.collapsed}
           timeout={300}
           classNames="track-group"
           unmountOnExit

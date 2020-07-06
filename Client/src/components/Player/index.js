@@ -8,7 +8,13 @@ import { IoIosVolumeHigh } from "react-icons/io";
 import Slider from '@material-ui/core/Slider';
 
 import WaveformChart from '../WaveformChart';
-import { secondsToMinutesFormat, getNextTrackForPlaylist, getPreviousTrackForPlaylist, getRandomTrack } from '../../shared/utilities';
+import {
+  secondsToMinutesFormat,
+  getNextTrackForPlaylist,
+  getPreviousTrackForPlaylist,
+  getRandomTrack,
+  getActiveSongGroupAndTrack,
+} from '../../shared/utilities';
 import { streamLinkType } from '../../shared/enums/streamLinkType';
 import './index.scss';
 
@@ -18,14 +24,15 @@ Player.propTypes = {
   isRepeatFilterEnabled: PropTypes.bool,
   isRandomOrderEnabled: PropTypes.bool,
   activeTrack: PropTypes.object,
+  playerControl: PropTypes.object,
+  bandInfo: PropTypes.object,
   currentPlayTime: PropTypes.number,
   changeIsPlaying: PropTypes.func,
   changeActiveTrack: PropTypes.func,
   changeMasterFilter: PropTypes.func,
   changeRepeatFilter: PropTypes.func,
   changeRandomOrder: PropTypes.func,
-  playerControl: PropTypes.object,
-  bandInfo: PropTypes.object,
+  changeCollapsedSongGroup: PropTypes.func,
 };
 
 function Player(props) {
@@ -58,10 +65,14 @@ function Player(props) {
     const link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
 
     props.changeActiveTrack(nextTrack);
+    props.changeIsPlaying(true);
     props.playerControl.setSrc(link);
+    props.playerControl.play();
 
-    if (props.isPlaying) {
-      props.playerControl.play(); 
+    if (!nextTrack.isMaster) {
+      const { activeSongGroupPosition } = getActiveSongGroupAndTrack(props.bandInfo.album.songGroups, nextTrack.id);
+      
+      props.changeCollapsedSongGroup(activeSongGroupPosition, true);
     }
   };
 
@@ -73,10 +84,14 @@ function Player(props) {
     const link = previousTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
     
     props.changeActiveTrack(previousTrack);
+    props.changeIsPlaying(true);
     props.playerControl.setSrc(link);
+    props.playerControl.play();
 
-    if (props.isPlaying) {
-      props.playerControl.play();
+    if (!previousTrack.isMaster) {
+      const { activeSongGroupPosition } = getActiveSongGroupAndTrack(props.bandInfo.album.songGroups, previousTrack.id);
+
+      props.changeCollapsedSongGroup(activeSongGroupPosition, true);
     }
   };
 
