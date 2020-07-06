@@ -47,7 +47,7 @@ function Header() {
       <div className="header-container-filler d-none d-lg-block"></div>
       <div className="header-container-content d-flex align-items-center">
         <div className="col-6 col-lg-5 p-0">
-          <h4 className="d-none d-lg-block">TRUEMUZ</h4>
+          <h4 className="d-none d-lg-block">TRUEMUS</h4>
           {getAuthLayout()}
         </div>
 
