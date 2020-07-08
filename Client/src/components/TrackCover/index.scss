@@ -7,6 +7,7 @@
   width: 200px;
 
   @include media-breakpoint-down(lg) {
+    z-index: 1010;
     width: 150px;
   }
 
