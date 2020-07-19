@@ -1,28 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 
 import Playlist from '../Playlist';
 import TrackDescription from '../TrackDescription';
 import TrackCover from '../TrackCover';
+import { setActiveTrack, setIsPlaying, setCollapsedSongGroup } from '../../store/actions';
 import { getActiveSongGroupAndTrack } from '../../shared/utilities';
 import { streamLinkType } from '../../shared/enums/streamLinkType';
 import './index.scss';
 
 BandInfo.propTypes = {
-  activeTrack: PropTypes.object,
-  bandInfo: PropTypes.object,
   playerControl: PropTypes.object,
-  isPlaying: PropTypes.bool,
-  collapsedSongGroups: PropTypes.array,
-  changeActiveTrack: PropTypes.func,
-  changeIsPlaying: PropTypes.func,
-  changeCollapsedSongGroup: PropTypes.func,
+
+  bandInfo: PropTypes.object,
+  activeTrack: PropTypes.object,
+  activeWikiTrack: PropTypes.object,
+  setActiveTrack: PropTypes.func,
+  setIsPlaying: PropTypes.func,
+  setCollapsedSongGroup: PropTypes.func,
 };
 
-function BandInfo(props) {
-  const [wiki, setWiki] = useState('');
-  const [wikiTrack, setWikiTrack] = useState(null);
+const mapStateToProps = state => ({
+  bandInfo: state.selectedBand.bandInfo,
+  activeTrack: state.selectedBand.activeTrack,
+  activeWikiTrack: state.selectedBand.activeWikiTrack,
+});
 
+const mapDispatchToProps = dispatch => ({
+  setActiveTrack: (activeTrack) => dispatch(setActiveTrack(activeTrack)),
+  setIsPlaying: (isPlaying) => dispatch(setIsPlaying(isPlaying)),
+  setCollapsedSongGroup: (songGroupIndex, value) => dispatch(setCollapsedSongGroup(songGroupIndex, value)),
+});
+
+function BandInfo(props) {
   const { bandInfo } = props;
 
   const handleTrackClickInDescription = (targetTrackId) => {
@@ -34,38 +45,32 @@ function BandInfo(props) {
 
     const selectedTrack = activeSongGroup.songs[activeTrackPosition];
     
-    props.changeActiveTrack(selectedTrack);
-    props.changeIsPlaying(true);
+    props.setActiveTrack(selectedTrack);
+    props.setIsPlaying(true);
     props.playerControl.setSrc(selectedTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS));
     props.playerControl.play();
 
     if (!selectedTrack.isMaster) {
-      props.changeCollapsedSongGroup(activeSongGroupPosition, true);
+      props.setCollapsedSongGroup(activeSongGroupPosition, true);
     }
+  };
+
+  const getWikiDescription = () => {
+    if (props.activeWikiTrack) {
+      const songGroup = bandInfo.album.songGroups
+        .find(songGroup => songGroup.songs.find(s => s.id == props.activeWikiTrack.id));
+
+      return songGroup.wiki;
+    }
+
+    return null;
   };
 
   const isPlayerVisible = () => props.activeTrack !== null;
 
-  useEffect(() => {
-    if (wikiTrack) {
-      const songGroup = bandInfo.album.songGroups
-        .find(songGroup => songGroup.songs.find(s => s.id == wikiTrack.id));
-
-      setWiki(songGroup.wiki);
-    }
-  }, [wikiTrack, bandInfo]);
-
   return (
     <div className="d-flex band-info-container w-100">
       <Playlist
-        activeTrack={props.activeTrack}
-        isPlaying={props.isPlaying}
-        collapsedSongGroups={props.collapsedSongGroups}
-        changeActiveTrack={props.changeActiveTrack}
-        changeIsPlaying={props.changeIsPlaying}
-        changeWikiTrack={setWikiTrack}
-        changeCollapsedSongGroup={props.changeCollapsedSongGroup}
-        wikiTrack={wikiTrack}
         bandInfo={bandInfo}
         playerControl={props.playerControl}
       />
@@ -78,7 +83,7 @@ function BandInfo(props) {
       />
 
       <TrackDescription 
-        wiki={wiki}
+        wiki={getWikiDescription()}
         isPlayerVisible={isPlayerVisible()}
         changeTrack={handleTrackClickInDescription}
       />
@@ -86,4 +91,7 @@ function BandInfo(props) {
   );
 }
 
-export default React.memo(BandInfo);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(React.memo(BandInfo));

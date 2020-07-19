@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { connect } from "react-redux";
 import { Switch, Route } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PropTypes from 'prop-types';
@@ -8,60 +9,78 @@ import Header from '../Header';
 import Player from '../Player';
 import VideoJsPlayer from '../VideoJsPlayer';
 import BandInfo from '../BandInfo';
-import { getBandInfoByName } from '../../services/api-service';
 import { getNextTrackForPlaylist, getRandomTrack, getActiveSongGroupAndTrack } from '../../shared/utilities';
 import { streamLinkType } from '../../shared/enums/streamLinkType';
+import { loadBandInfo, setActiveTrack, setCollapsedSongGroup, setCurrentPlayTime } from '../../store/actions';
 import './index.scss';
 
 App.propTypes = {
   isTablet: PropTypes.bool,
+  bandInfo: PropTypes.object,
+  activeTrack: PropTypes.object,
+  isMasterModeEnabled: PropTypes.bool,
+  isRepeatModeEnabled: PropTypes.bool,
+  isRandomModeEnabled: PropTypes.bool,
+  loadBandInfo: PropTypes.func,
+  setActiveTrack: PropTypes.func,
+  setCollapsedSongGroup: PropTypes.func,
+  setCurrentPlayTime: PropTypes.func,
 };
 
 const mapSizesToProps = ({ width }) => ({
   isTablet: width < 992,
 });
 
+const mapStateToProps = state => ({
+  bandInfo: state.selectedBand.bandInfo,
+  activeTrack: state.selectedBand.activeTrack,
+  isMasterModeEnabled: state.player.isMasterModeEnabled,
+  isRepeatModeEnabled: state.player.isRepeatModeEnabled,
+  isRandomModeEnabled: state.player.isRandomModeEnabled,
+});
+
+const mapDispatchToProps = dispatch => ({
+  loadBandInfo: () => dispatch(loadBandInfo()),
+  setActiveTrack: (activeTrack) => dispatch(setActiveTrack(activeTrack)),
+  setCollapsedSongGroup: (songGroupIndex, value) => dispatch(setCollapsedSongGroup(songGroupIndex, value)),
+  setCurrentPlayTime: (currentPlayTime) => dispatch(setCurrentPlayTime(currentPlayTime)),
+});
+
 function App(props) {
-  const [activeTrack, setActiveTrack] = useState(null);
-  const [bandInfo, setBandInfo] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentPlayTime, setCurrentPlayTime] = useState(0);
-  const [isMasterFilterEnabled, setIsMasterFilterEnabled] = useState(false);
-  const [isRepeatFilterEnabled, setIsRepeatFilterEnabled] = useState(false);
-  const [isRandomOrderEnabled, setIsRandomOrderEnabled] = useState(false);
-  const [collapsedSongGroups, setCollapsedSongGroups] = useState([]);
   const videoJsPlayerRef = useRef(null);
+
+  const {
+    bandInfo,
+    activeTrack,
+    isMasterModeEnabled,
+    isRepeatModeEnabled,
+    isRandomModeEnabled,
+    loadBandInfo,
+    setActiveTrack,
+    setCollapsedSongGroup,
+    setCurrentPlayTime,
+  } = props;
 
   useEffect(() => {
     const loadData = async () => {
-      let data = await getBandInfoByName('Modernova');
-      const album = data.albums[0];
-      delete data.albums;
-      data.album = album;
+      await loadBandInfo();
 
-      setBandInfo(data);
-      setCollapsedSongGroups(data.album.songGroups.map(() => false));
+      const handleTimeChange = () => {
+        setCurrentPlayTime(videoJsPlayerRef.current.getCurrentPlayTime());
+      };
 
       videoJsPlayerRef.current.setEventHandler('timeupdate', handleTimeChange);
     };
 
     loadData();
-  }, []);
-
-  const changeCollapsedSongGroup = useCallback(
-    (index, value) => {
-      const updatedCollapsedSongGroups = [...collapsedSongGroups];
-
-      updatedCollapsedSongGroups[index] = value;
-      setCollapsedSongGroups(updatedCollapsedSongGroups);
-    }, [collapsedSongGroups]);
+  }, [loadBandInfo, setCurrentPlayTime]);
 
   useEffect(() => {
     const handleTrackEnd = () => {
-      if (!isRepeatFilterEnabled) {
-        const nextTrack = isRandomOrderEnabled
-          ? getRandomTrack(bandInfo.album.songGroups, activeTrack.id, isMasterFilterEnabled)
-          : getNextTrackForPlaylist(bandInfo.album.songGroups, activeTrack.id, isMasterFilterEnabled);
+      if (!isRepeatModeEnabled) {
+        const nextTrack = isRandomModeEnabled
+          ? getRandomTrack(bandInfo.album.songGroups, activeTrack.id, isMasterModeEnabled)
+          : getNextTrackForPlaylist(bandInfo.album.songGroups, activeTrack.id, isMasterModeEnabled);
 
         const link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
 
@@ -71,7 +90,7 @@ function App(props) {
         if (!nextTrack.isMaster) {
           const { activeSongGroupPosition } = getActiveSongGroupAndTrack(bandInfo.album.songGroups, nextTrack.id);
           
-          changeCollapsedSongGroup(activeSongGroupPosition, true);
+          setCollapsedSongGroup(activeSongGroupPosition, true);
         }
       }
 
@@ -83,11 +102,7 @@ function App(props) {
       videoJsPlayerRef.current.removeEventHandler('ended');
       videoJsPlayerRef.current.setEventHandler('ended', handleTrackEnd);
     }
-  }, [isRepeatFilterEnabled, isRandomOrderEnabled, isMasterFilterEnabled, bandInfo, activeTrack, changeCollapsedSongGroup]);
-
-  const handleTimeChange = () => {
-    setCurrentPlayTime(videoJsPlayerRef.current.getCurrentPlayTime());
-  };
+  }, [isRepeatModeEnabled, isRandomModeEnabled, isMasterModeEnabled, bandInfo, activeTrack, setCollapsedSongGroup, setActiveTrack, setCurrentPlayTime]);
 
   const getPlayerClass = () => activeTrack
     ? props.isTablet
@@ -101,20 +116,8 @@ function App(props) {
       <div>
         {activeTrack && (
           <Player
-            activeTrack={activeTrack}
-            changeActiveTrack={setActiveTrack}    
-            isPlaying={isPlaying}
-            changeIsPlaying={setIsPlaying}
             playerControl={videoJsPlayerRef.current}
             bandInfo={bandInfo}
-            currentPlayTime={currentPlayTime}
-            isMasterFilterEnabled={isMasterFilterEnabled}
-            isRepeatFilterEnabled={isRepeatFilterEnabled}
-            isRandomOrderEnabled={isRandomOrderEnabled}
-            changeMasterFilter={setIsMasterFilterEnabled}
-            changeRepeatFilter={setIsRepeatFilterEnabled}
-            changeRandomOrder={setIsRandomOrderEnabled}
-            changeCollapsedSongGroup={changeCollapsedSongGroup}
           />
         )}
       </div>
@@ -125,16 +128,7 @@ function App(props) {
         <Switch>
           <Route path="/">
             {bandInfo ? (
-              <BandInfo
-                activeTrack={activeTrack}
-                changeActiveTrack={setActiveTrack}
-                isPlaying={isPlaying}        
-                changeIsPlaying={setIsPlaying}       
-                playerControl={videoJsPlayerRef.current}
-                bandInfo={bandInfo}
-                collapsedSongGroups={collapsedSongGroups}
-                changeCollapsedSongGroup={changeCollapsedSongGroup}
-              />
+              <BandInfo playerControl={videoJsPlayerRef.current} />
             ) : (
               <div>
                 <CircularProgress />
@@ -147,4 +141,7 @@ function App(props) {
   );
 }
 
-export default withSizes(mapSizesToProps)(App);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withSizes(mapSizesToProps)(App));
