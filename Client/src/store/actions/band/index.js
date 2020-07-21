@@ -8,12 +8,12 @@ import {
 } from "../../action-types";
 import { getBandInfoByName } from '../../../services/api-service';
 
-export function loadBandInfo() {
+export function loadBandInfo(bandName) {
   return async function(dispatch) {
     dispatch({ type: LOAD_BAND_INFO_STARTED });
 
     try {
-      const data = await getBandInfoByName('Modernova');
+      const data = await getBandInfoByName(bandName);
       const album = data.albums[0];
       delete data.albums;
       data.album = album;

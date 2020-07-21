@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import PropTypes from 'prop-types';
 
 import loadVideoJsLibrary from './load-videojs-lib';
 
-function VideoJsPlayer(props, ref) {
+function VideoJsPlayer({ isReady }, ref) {
   const playerDomRef = useRef(null);
   const [player, setPlayer] = useState(null);
 
@@ -50,6 +51,8 @@ function VideoJsPlayer(props, ref) {
       };
       
       setPlayer(window.videojs(playerDomRef.current, settings));
+
+      isReady();
     };
 
     loadLibrary();
@@ -65,4 +68,10 @@ function VideoJsPlayer(props, ref) {
   );
 }
 
-export default React.memo(forwardRef(VideoJsPlayer));
+const videoJsPlayer = React.memo(forwardRef(VideoJsPlayer));
+
+VideoJsPlayer.propTypes = {
+  isReady: PropTypes.func,
+};
+
+export default videoJsPlayer;

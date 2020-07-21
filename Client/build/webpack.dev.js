@@ -8,11 +8,13 @@ module.exports = {
   entry: './src/index.js',
   output: {
     filename: './dist/bundle.js',
+    publicPath: '/',
   },
   devServer: {
     contentBase: path.join(__dirname, './dist'),
     hot: true,
     open: true,
+    historyApiFallback: true,
   },
   devtool: 'eval-source-map',
   module: {

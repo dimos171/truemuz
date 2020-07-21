@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { connect } from "react-redux";
-import { Switch, Route } from 'react-router-dom';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import withSizes from 'react-sizes';
 
@@ -11,7 +10,7 @@ import VideoJsPlayer from '../VideoJsPlayer';
 import BandInfo from '../BandInfo';
 import { getNextTrackForPlaylist, getRandomTrack, getActiveSongGroupAndTrack } from '../../shared/utilities';
 import { streamLinkType } from '../../shared/enums/streamLinkType';
-import { loadBandInfo, setActiveTrack, setCollapsedSongGroup, setCurrentPlayTime } from '../../store/actions';
+import { setActiveTrack, setCollapsedSongGroup, setCurrentPlayTime } from '../../store/actions';
 import './index.scss';
 
 App.propTypes = {
@@ -21,7 +20,6 @@ App.propTypes = {
   isMasterModeEnabled: PropTypes.bool,
   isRepeatModeEnabled: PropTypes.bool,
   isRandomModeEnabled: PropTypes.bool,
-  loadBandInfo: PropTypes.func,
   setActiveTrack: PropTypes.func,
   setCollapsedSongGroup: PropTypes.func,
   setCurrentPlayTime: PropTypes.func,
@@ -40,7 +38,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadBandInfo: () => dispatch(loadBandInfo()),
   setActiveTrack: (activeTrack) => dispatch(setActiveTrack(activeTrack)),
   setCollapsedSongGroup: (songGroupIndex, value) => dispatch(setCollapsedSongGroup(songGroupIndex, value)),
   setCurrentPlayTime: (currentPlayTime) => dispatch(setCurrentPlayTime(currentPlayTime)),
@@ -55,25 +52,10 @@ function App(props) {
     isMasterModeEnabled,
     isRepeatModeEnabled,
     isRandomModeEnabled,
-    loadBandInfo,
     setActiveTrack,
     setCollapsedSongGroup,
     setCurrentPlayTime,
   } = props;
-
-  useEffect(() => {
-    const loadData = async () => {
-      await loadBandInfo();
-
-      const handleTimeChange = () => {
-        setCurrentPlayTime(videoJsPlayerRef.current.getCurrentPlayTime());
-      };
-
-      videoJsPlayerRef.current.setEventHandler('timeupdate', handleTimeChange);
-    };
-
-    loadData();
-  }, [loadBandInfo, setCurrentPlayTime]);
 
   useEffect(() => {
     const handleTrackEnd = () => {
@@ -104,6 +86,14 @@ function App(props) {
     }
   }, [isRepeatModeEnabled, isRandomModeEnabled, isMasterModeEnabled, bandInfo, activeTrack, setCollapsedSongGroup, setActiveTrack, setCurrentPlayTime]);
 
+  const setupEvents = () => {
+    const handleTimeChange = () => {
+      setCurrentPlayTime(videoJsPlayerRef.current.getCurrentPlayTime());
+    };
+
+    videoJsPlayerRef.current.setEventHandler('timeupdate', handleTimeChange);
+  };
+  
   const getPlayerClass = () => activeTrack
     ? props.isTablet
       ? 'visible-player-mobile'
@@ -122,18 +112,18 @@ function App(props) {
         )}
       </div>
 
-      <VideoJsPlayer ref={videoJsPlayerRef} />
+      <VideoJsPlayer
+        ref={videoJsPlayerRef}
+        isReady={setupEvents}
+      />
 
       <div className={`partial-view-container d-flex ${getPlayerClass()}`}>
         <Switch>
+          <Route exact path="/band/:bandName">
+            <BandInfo playerControl={videoJsPlayerRef.current} />
+          </Route>
           <Route path="/">
-            {bandInfo ? (
-              <BandInfo playerControl={videoJsPlayerRef.current} />
-            ) : (
-              <div>
-                <CircularProgress />
-              </div>
-            )}
+            <Redirect to="/band/Modernova" />
           </Route>
         </Switch>
       </div>
