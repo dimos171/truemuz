@@ -3,6 +3,7 @@ import {
   setActiveTrack,
   setActiveWikiTrack,
   setCollapsedSongGroup,
+  setTag,
 } from './band';
 import {
   setIsPlaying,
@@ -18,6 +19,7 @@ export {
   setActiveWikiTrack,
   setIsPlaying,
   setCollapsedSongGroup,
+  setTag,
   setMasterMode,
   setRepeatMode,
   setRandomMode,

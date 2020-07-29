@@ -22,7 +22,7 @@ body {
 }
 
 .icon {
-  cursor: pointer;
+  cursor: pointer !important;
 
   &.active {
     color: $main-dark-theme-link-color !important;

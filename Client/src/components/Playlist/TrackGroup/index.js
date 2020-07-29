@@ -47,28 +47,36 @@ function TrackGroup(props) {
     );
 
   return (
-    <div className={isCollapsed ? 'collapsed' : ''}>
-      <Track
-        track={masterTrack}
-        collapsed={isCollapsed}
-        collapsedChange={handleCollapsedClick}
-        constainsAltervative={constainsAltervative}
-        playerControl={props.playerControl}
-        mainVersion
-      />
+    <div className={isCollapsed && masterTrack ? 'collapsed' : ''}>
+      {masterTrack && (
+        <Track
+          track={masterTrack}
+          collapsed={isCollapsed}
+          collapsedChange={handleCollapsedClick}
+          constainsAltervative={constainsAltervative}
+          playerControl={props.playerControl}
+          mainVersion
+        />
+      )}
 
-      {constainsAltervative && (
-        <CSSTransition
-          in={isCollapsed}
-          timeout={300}
-          classNames="track-group"
-          unmountOnExit
-        >
+      {masterTrack ?
+        (constainsAltervative && (
+          <CSSTransition
+            in={isCollapsed}
+            timeout={300}
+            classNames="track-group"
+            unmountOnExit
+          >
+            <div>
+              {getAlternativeTracksMarkup()}
+            </div>
+          </CSSTransition>
+        )) : (
           <div>
             {getAlternativeTracksMarkup()}
           </div>
-        </CSSTransition>
-      )}
+        )
+    }
     </div>
   );
 }

@@ -29,7 +29,7 @@ import './index.scss';
 
 Player.propTypes = {
   playerControl: PropTypes.object,
-  bandInfo: PropTypes.object,
+  filteredSongGroups: PropTypes.array,
 
   activeTrack: PropTypes.object,
   currentPlayTime: PropTypes.number,
@@ -87,8 +87,8 @@ function Player(props) {
 
   const handleNextTrackIconClick = () => {
     const nextTrack = props.isRandomModeEnabled
-      ? getRandomTrack(props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterModeEnabled)
-      : getNextTrackForPlaylist(props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterModeEnabled);
+      ? getRandomTrack(props.filteredSongGroups, props.activeTrack.id, props.isMasterModeEnabled)
+      : getNextTrackForPlaylist(props.filteredSongGroups, props.activeTrack.id, props.isMasterModeEnabled);
 
     const link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
 
@@ -98,7 +98,7 @@ function Player(props) {
     props.playerControl.play();
 
     if (!nextTrack.isMaster) {
-      const { activeSongGroupPosition } = getActiveSongGroupAndTrack(props.bandInfo.album.songGroups, nextTrack.id);
+      const { activeSongGroupPosition } = getActiveSongGroupAndTrack(props.filteredSongGroups, nextTrack.id);
       
       props.setCollapsedSongGroup(activeSongGroupPosition, true);
     }
@@ -106,8 +106,8 @@ function Player(props) {
 
   const handlePreviousTrackIconClick = () => {
     const previousTrack = props.isRandomModeEnabled
-      ? getRandomTrack(props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterModeEnabled)
-      : getPreviousTrackForPlaylist(props.bandInfo.album.songGroups, props.activeTrack.id, props.isMasterModeEnabled);
+      ? getRandomTrack(props.filteredSongGroups, props.activeTrack.id, props.isMasterModeEnabled)
+      : getPreviousTrackForPlaylist(props.filteredSongGroups, props.activeTrack.id, props.isMasterModeEnabled);
 
     const link = previousTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
     
@@ -117,7 +117,7 @@ function Player(props) {
     props.playerControl.play();
 
     if (!previousTrack.isMaster) {
-      const { activeSongGroupPosition } = getActiveSongGroupAndTrack(props.bandInfo.album.songGroups, previousTrack.id);
+      const { activeSongGroupPosition } = getActiveSongGroupAndTrack(props.filteredSongGroups, previousTrack.id);
 
       props.setCollapsedSongGroup(activeSongGroupPosition, true);
     }

@@ -17,6 +17,7 @@ App.propTypes = {
   isTablet: PropTypes.bool,
   bandInfo: PropTypes.object,
   activeTrack: PropTypes.object,
+  filteredSongGroups: PropTypes.array,
   isMasterModeEnabled: PropTypes.bool,
   isRepeatModeEnabled: PropTypes.bool,
   isRandomModeEnabled: PropTypes.bool,
@@ -30,8 +31,8 @@ const mapSizesToProps = ({ width }) => ({
 });
 
 const mapStateToProps = state => ({
-  bandInfo: state.selectedBand.bandInfo,
   activeTrack: state.selectedBand.activeTrack,
+  filteredSongGroups: state.selectedBand.filteredSongGroups,
   isMasterModeEnabled: state.player.isMasterModeEnabled,
   isRepeatModeEnabled: state.player.isRepeatModeEnabled,
   isRandomModeEnabled: state.player.isRandomModeEnabled,
@@ -47,8 +48,8 @@ function App(props) {
   const videoJsPlayerRef = useRef(null);
 
   const {
-    bandInfo,
     activeTrack,
+    filteredSongGroups,
     isMasterModeEnabled,
     isRepeatModeEnabled,
     isRandomModeEnabled,
@@ -61,8 +62,8 @@ function App(props) {
     const handleTrackEnd = () => {
       if (!isRepeatModeEnabled) {
         const nextTrack = isRandomModeEnabled
-          ? getRandomTrack(bandInfo.album.songGroups, activeTrack.id, isMasterModeEnabled)
-          : getNextTrackForPlaylist(bandInfo.album.songGroups, activeTrack.id, isMasterModeEnabled);
+          ? getRandomTrack(filteredSongGroups, activeTrack.id, isMasterModeEnabled)
+          : getNextTrackForPlaylist(filteredSongGroups, activeTrack.id, isMasterModeEnabled);
 
         const link = nextTrack.streamLinks.find(sl => sl.type === streamLinkType.HLS);
 
@@ -70,7 +71,7 @@ function App(props) {
         videoJsPlayerRef.current.setSrc(link);
 
         if (!nextTrack.isMaster) {
-          const { activeSongGroupPosition } = getActiveSongGroupAndTrack(bandInfo.album.songGroups, nextTrack.id);
+          const { activeSongGroupPosition } = getActiveSongGroupAndTrack(filteredSongGroups, nextTrack.id);
           
           setCollapsedSongGroup(activeSongGroupPosition, true);
         }
@@ -84,7 +85,7 @@ function App(props) {
       videoJsPlayerRef.current.removeEventHandler('ended');
       videoJsPlayerRef.current.setEventHandler('ended', handleTrackEnd);
     }
-  }, [isRepeatModeEnabled, isRandomModeEnabled, isMasterModeEnabled, bandInfo, activeTrack, setCollapsedSongGroup, setActiveTrack, setCurrentPlayTime]);
+  }, [isRepeatModeEnabled, isRandomModeEnabled, isMasterModeEnabled, filteredSongGroups, activeTrack, setCollapsedSongGroup, setActiveTrack, setCurrentPlayTime]);
 
   const setupEvents = () => {
     const handleTimeChange = () => {
@@ -107,7 +108,7 @@ function App(props) {
         {activeTrack && (
           <Player
             playerControl={videoJsPlayerRef.current}
-            bandInfo={bandInfo}
+            filteredSongGroups={filteredSongGroups}
           />
         )}
       </div>

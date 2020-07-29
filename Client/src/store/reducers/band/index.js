@@ -5,6 +5,7 @@ import {
   SET_ACTIVE_TRACK,
   SET_ACTIVE_WIKI_TRACK,
   SET_COLLAPSED_SONG_GROUP,
+  SET_TAG,
 } from '../../action-types';
 
 const initialState = {
@@ -13,6 +14,8 @@ const initialState = {
   bandInfo: null,
   activeTrack: null,
   collapsedSongGroups: [],
+  filteredSongGroups: [],
+  tags: [],
 };
 
 export default function bandReducer(state = initialState, action) {
@@ -27,8 +30,10 @@ export default function bandReducer(state = initialState, action) {
       return {
         ...state,
         isLoading: false,
-        bandInfo: action.payload,
-        collapsedSongGroups: action.payload.album.songGroups.map(() => false),
+        bandInfo: action.payload.bandInfo,
+        filteredSongGroups: action.payload.bandInfo.album.songGroups,
+        collapsedSongGroups: action.payload.bandInfo.album.songGroups.map(() => false),
+        tags: action.payload.tags.map((tag) => ({ name: tag, isActive: false })),
       };
     case LOAD_BAND_INFO_FAILED:
       return {
@@ -50,6 +55,13 @@ export default function bandReducer(state = initialState, action) {
       return {
         ...state,
         collapsedSongGroups: action.payload,
+      };
+    case SET_TAG:
+      return {
+        ...state,
+        tags: action.payload.tags,
+        filteredSongGroups: action.payload.filteredSongGroups,
+        collapsedSongGroups: state.collapsedSongGroups.map(() => false),
       };
   }
 

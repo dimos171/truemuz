@@ -1,14 +1,22 @@
 import React from 'react';
+import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 
 import TrackGroup from './TrackGroup';
 import './index.scss';
+import TagsList from '../TagsList';
 
 Playlist.propTypes = {
   bandInfo: PropTypes.object,
   playerControl: PropTypes.object,
   collapsedSongGroups: PropTypes.array,
+
+  filteredSongGroups: PropTypes.array,
 };
+
+const mapStateToProps = state => ({
+  filteredSongGroups: state.selectedBand.filteredSongGroups,
+});
 
 function Playlist(props) {
   const { bandInfo } = props;
@@ -43,8 +51,10 @@ function Playlist(props) {
         </div>
       </div>
 
+      <TagsList />
+
       <div className="playlist-tracks ml-n5">
-        {bandInfo.album.songGroups.map((trackGroup, index) =>
+        {props.filteredSongGroups.map((trackGroup, index) =>
           <TrackGroup
             key={index}
             trackGroupIndex={index}
@@ -57,4 +67,7 @@ function Playlist(props) {
   );
 }
 
-export default React.memo(Playlist);
+export default connect(
+  mapStateToProps,
+  null,
+)(React.memo(Playlist));
