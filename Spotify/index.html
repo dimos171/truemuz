@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Spotify Web Playback SDK</title>
+</head>
+
+<body>
+    <h1>Spotify Web Playback SDK</h1>
+
+    <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 5px;"><button onclick='play("0aGQHMr7bc23Y9Ts84ffop")'>RHCP - Around The World</button></div>
+        <div style="margin-bottom: 5px;"><button onclick='play("48UPSzbZjgc449aqz8bxox")'>RHCP - Californication</button></div>
+    </div>
+    <div>
+        <button onclick="resume()">Resume</button>
+        <button onclick="pause()">Stop</button>
+    </div>
+
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script>
+
+        var spotifyPlayer;
+
+        function play(trackId) {
+            console.log(trackId);
+            setTrack({
+                playerInstance: spotifyPlayer,
+                spotify_uri: `spotify:track:${trackId}`,
+            });
+        }
+
+        function resume() {
+            spotifyPlayer.resume();
+        }
+
+        function pause() {
+            spotifyPlayer.pause();
+        }
+
+        const setTrack = ({
+            spotify_uri,
+            playerInstance: {
+                _options: {
+                    getOAuthToken,
+                    id
+                }
+            }
+        }) => {
+            getOAuthToken(access_token => {
+                fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ uris: [spotify_uri] }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${access_token}`
+                    },
+                });
+            });
+        };
+
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            const token = 'BQA4Nh4cq0aN2f1883nJvqp06Yvmr4JLNmfCs0JWINbA70fVoiRfLHhsqvR1_tZyS-sq30MAhiHSR-_3iJiH_Pigkq8bmcUrDAPjcHAJ0rFNRe7InDhgjROROX-cd_NgMfJPxWQYP-DFGNbTts_s4eml1htuqFE3NrS7--0iEwQ7nCa6GlVbURxg0EU';
+            const player = new Spotify.Player({
+                name: 'Web Playback SDK Quick Start Player',
+                getOAuthToken: cb => { cb(token); }
+            });
+
+            // Error handling
+            player.addListener('initialization_error', ({ message }) => { console.error(message); });
+            player.addListener('authentication_error', ({ message }) => { console.error(message); });
+            player.addListener('account_error', ({ message }) => { console.error(message); });
+            player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+            // Playback status updates
+            player.addListener('player_state_changed', state => { console.log(state); });
+
+            // Ready
+            player.addListener('ready', ({ device_id }) => {
+                console.log('Ready with Device ID', device_id);
+                spotifyPlayer = player;
+            });
+
+            // Not Ready
+            player.addListener('not_ready', ({ device_id }) => {
+                console.log('Device ID has gone offline', device_id);
+            });
+
+            // Connect to the player!
+            player.connect();
+        };
+    </script>
+</body>
+
+</html>
